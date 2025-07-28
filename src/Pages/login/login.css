@@ -1,0 +1,206 @@
+/* Base container with background image */
+.login {
+  background-image: url("../../Assets/Images/plot-image-3.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Centering the login card */
+.loginpageparent {
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  box-sizing: border-box;
+  margin-left: 100px;
+}
+
+/* Login card */
+.branch2 {
+  /* background-color: #fff; */
+  background-color: #ffffffe5;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Welcome text */
+.welcom {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcom p:first-child {
+  font-size: 22px;
+  color: rgba(20, 24, 31, 0.92);
+  font-weight: 600;
+}
+
+.welcom p:last-child {
+  font-size: 14px;
+  color: rgb(57 58 58);
+}
+
+/* Input sections */
+.LoginInputParentSec {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.UserNameInputDiv,
+.PasswordInputDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.UserNameText {
+  font-size: 14px;
+  color: #42464C;
+}
+
+/* Input icon container */
+.InputContainer {
+  position: relative;
+  width: 100%;
+}
+
+/* User and eye icons */
+.UserIcon,
+.PasswordIcon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #696B70;
+  font-size: 16px;
+}
+
+.UserIcon {
+  left: 12px;
+}
+
+.PasswordIcon {
+  right: 12px;
+  cursor: pointer;
+}
+
+/* Input fields */
+.UserNameInput,
+.PasswordInput {
+  width: 90% !important;
+  padding: 12px 12px 12px 40px;
+  font-size: 14px;
+  border: none;
+  outline: none;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  color: #696B70;
+}
+
+/* Checkbox row */
+.chckbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.control-label {
+  width: 100%;
+  font-size: 12px;
+}
+
+.control-checkbox {
+  font-size: 12px;
+}
+
+/* Login button */
+.LoginButton {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  /* background-color: rgba(30, 93, 211, 1); */
+}
+
+.button {
+  background-color: rgb(10, 215, 47);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 200px;
+}
+
+.button:hover {
+  background-color: rgba(30, 93, 211, 0.85);
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .branch2 {
+    padding: 20px;
+  }
+
+  .button {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  /* .UserNameInput,
+  .PasswordInput {
+    font-size: 13px;
+    padding: 10px 10px 10px 36px;
+  } */
+
+  .welcom p:first-child {
+    font-size: 20px;
+  }
+
+  .welcom p:last-child {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login {
+    background-position: top;
+  }
+
+  .branch2 {
+    padding: 16px;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .UserNameInput,
+  .PasswordInput {
+    padding: 10px 10px 10px 36px;
+    font-size: 12px;
+  }
+
+  .UserIcon,
+  .PasswordIcon {
+    font-size: 14px;
+  }
+
+  .welcom p:first-child {
+    font-size: 18px;
+  }
+
+  .welcom p:last-child {
+    font-size: 12px;
+  }
+}
