@@ -18,6 +18,8 @@ const ProjectDataList = (props) => {
   const inputRef = useRef(null);
   const datalistRef = useRef(null);
   const divRef = useRef(null);
+   const pageRef = useRef(1);
+   const limit=50;
 
   useEffect(() => {
     if (props.inputSelected) {
@@ -28,6 +30,9 @@ const ProjectDataList = (props) => {
     }else{
       setInputValue('')
     }
+    // if(inputValue && props.FilterOptions){
+    //  props.FilterOptions(inputValue || fieldinput)
+    // }
   }, [inputValue, props]);
 
   useEffect(() => {
@@ -44,7 +49,7 @@ const ProjectDataList = (props) => {
     const value = e.target.value;
     setfieldinput(value)
     setInputValue(value);
-    filterOptions(value);
+   props.FilterOptions ? props.FilterOptions(value,pageRef.current,limit) : filterOptions(value);
   };
 
   const filterOptions = (value) => {
@@ -66,7 +71,13 @@ const ProjectDataList = (props) => {
   };
 
   const handleFocus = () => {
-    filterOptions(inputValue);
+    
+    // if(props.value){
+   props.FilterOptions ? props.FilterOptions(inputValue,pageRef.current,limit) : filterOptions(inputValue);
+    setIsOpen(true)
+    // }else{
+    //   filterOptions(inputValue);
+    // }
     if (props.onChange) {
       props.onChange(filterIndex, inputValue);
     }
@@ -76,6 +87,10 @@ const ProjectDataList = (props) => {
   };
 
   const handleClickAway = () => {
+    if(!props.value){
+      setInputValue('')
+      setfieldinput('')
+    }
     setIsOpen(false);
     setScrollHt(0);
     setFilterIndex(1);
@@ -109,12 +124,17 @@ const ProjectDataList = (props) => {
           handleOptionClick(filteredOptions[selectedIndex]);
         }
         break;
+      case "Backspace":
+        props.clear(true)
+        break;
     }
   };
 
   const clear = () => {
     setInputValue("");
-    setFilteredOptions(props.options);
+    setfieldinput('')
+    props.FilterOptions ? props.FilterOptions('',pageRef.current,limit) : setFilteredOptions(props.options);
+    // setFilteredOptions(props.options);
     props.clear(true);
   };
 
@@ -125,6 +145,13 @@ const ProjectDataList = (props) => {
       setFilterIndex((prev) => prev + 1);
       // props.onChange(filterIndex + 1, inputValue);
     }
+     const isBottom = scrollTop + clientHeight >= scrollHeight - 20;
+
+    if (isBottom) {
+      props.FilterOptions ? props.FilterOptions(fieldinput,pageRef.current,limit) : setFilteredOptions(props.options);
+      pageRef.current += 1;
+    }
+
   };
 
   const handleBlur = () => {
@@ -133,6 +160,10 @@ const ProjectDataList = (props) => {
         // setIsOpen(false);
       }
       setJustSelected(false);
+      pageRef.current = 1;
+      if(props.Blur){
+      props.Blur(true)
+    }
     }, 200);
   };
   
@@ -214,13 +245,15 @@ const ProjectDataList = (props) => {
               {filteredOptions && filteredOptions.length > 0 ? (
                 filteredOptions.map((option, index) => (
                     <div  key={index} onClick={() => {handleOptionClick(option)}} className="DropdownDiv" style={{ cursor: "pointer",  display: "grid", justifyContent: "space-evenly", height:"25px",gridTemplateColumns:props.Visiblefields.length > 1  ? "1fr 1fr" : "2fr",borderBottom: "1px solid rgb(221 221 221 / 34%)",paddingLeft:'7px'}}>
-                      {props.Visiblefields.map((e, i) => (
-                        <StyledTooltip title={option[e]} placement="top">
+                      {props.Visiblefields.map((e, i) => 
+                       { return !props.NoToolTip ? (<StyledTooltip title={option[e]} placement="top">
                           <div key={i} className="optionStyle">
                             {option[e]}
                             </div>
-                            </StyledTooltip>
-                      ))}
+                            </StyledTooltip>):(<div key={i} className="optionStyle">
+                            {option[e]}
+                            </div>)}
+                      )}
                     </div>
                 ))
               ) : (

@@ -14,64 +14,48 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { config } from '../../../Components/CustomComponents/config';
 import Switch from '@mui/material/Switch';
-import { Checkbox, FormGroup, FormControlLabel, FormLabel, Box } from '@mui/material';
+import FormGroup from '@mui/material/FormGroup';
 import ToggleSwitch from '../../../Components/CustomComponents/toggleSwitch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ExportTableToExcel from "../../../Components/CustomComponents/ExportTableToExcel";
 import GridContainer from '../../../Components/CustomComponents/GridContainer';
 import GridItem from '../../../Components/CustomComponents/GridItem';
 import DataTable from 'react-data-table-component';
 import { FaEye, FaEdit, FaTrash, FaCircle } from 'react-icons/fa';
-import DropDown from '../../../Components/CustomComponents/DataList'
-import '../../../Assets/app.css'
 import { TbRefresh } from "react-icons/tb";
 import StyledTooltip from '../../../Components/CustomComponents/Tooltip'
 import ViewDataModal from '../../../Components/CustomComponents/ViewData';
 
 const initialState = {
   _id: '',
-  parentId:'',
-  ParentName:'',
-    formId:'',
-   title:'',
-   sortOrder:''
+    UnitName:'',    
+   UnitLocation:'',
+   UnitCode:'',
+   isDispatchEnabled:false
  }
-export default function MenuRegistryTable(props) {
-  const headers = ["Form ID","Menu Name",'Active']
-  const TableVisibleItem = ["formId","title",'isActive']
-  const [open, setOpen] = useState(false);
+export default function UnitTable(props) {
+  const headers = ["Unit Name","Unit Location","Unit Code","Enable Dispatch",'Active']
+  const TableVisibleItem = ["UnitName","UnitLocation","UnitCode","isDispatchEnabled",'isActive']
+    const [open, setOpen] = useState(false);
     const [Viewdata,setViewData] = useState({})
 const columns = [
   {
-    name: 'Form ID',
-    selector: row => row.formId,
+    name: 'Unit Name',
+    selector: row => row.UnitName,
     sortable: true,
-    width: '20%',
-  },
-  {
-    name: 'Menu Name',
-    selector: row => row.title,
-    sortable: true,
-    width: '30%',
+    width: '40%',
   },
 //   {
-//     name: 'Parent Name',
-//     selector: row => row.ParentName,
-//     sortable: false,
-//     width: '30%',
+//     name: 'Unit Location',
+//     selector: row => row.UnitLocation,
+//     sortable: true,
+//     width: '20%',
 //   },
-  // {
-  //   name: 'Active',
-  //   selector: row => row.isActive,
-  //   sortable: true,
-  //   cell: row => (
-  //     <FaCircle
-  //       color={row.isActive ? 'green' : 'red'}
-  //       title={row.isActive ? 'Active' : 'Inactive'}
-  //       size={12}
-  //     />
-  //   ),
-  //   center: true,
-  // },
+  {name:"Unit Code",
+   selector: row => row.UnitCode,
+   sortable: true,
+   width: '40%',
+  },
   {
     name: 'Actions',
     cell: row => (
@@ -107,15 +91,14 @@ const columns = [
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  const [Menu, setMenu] = useState([])
+  const [Unit, setUnit] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [Data, SetData] = useState([])
   const [active, setActive] = useState(true);
 
   useEffect(() => {
-    getMenu()
+    getUnit()
   }, [])
 
   const debounce = (func, delay) => {
@@ -131,18 +114,18 @@ const columns = [
   const handleSearchChange = (
     debounce((value) => {
       setSearchTerm(value);
-      if (Menu.length > 0) {
+      if (Unit.length > 0) {
         applySearchFilter(value);
       }
     }, 300)
   );
 
   const applySearchFilter = (search) => {
-    if (Menu.length === 0) {
+    if (Unit.length === 0) {
       return;
     }
 
-    let data = [...Menu];
+    let data = [...Unit];
     const filtered = data.filter((row) =>
       Object.values(row).some((value) =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
@@ -163,27 +146,32 @@ const columns = [
     setIsEdit(false);
     setActive(true);
     dispatch({ type: 'text', name: '_id', value: "" });
-    dispatch({ type: 'text', name: "parentId", value: "" });
-    dispatch({ type: 'text', name: "ParentName", value: "" });
-        dispatch({ type: 'text', name: "formId", value: "" });
-       dispatch({ type: 'text', name: "title", value: "" });
-       dispatch({ type: 'text', name: "sortOrder", value: "" });
+        dispatch({ type: 'text', name: "UnitName", value: "" });
+       dispatch({ type: 'text', name: "UnitLocation", value: "" });
+       dispatch({ type: 'text', name: "UnitCode", value: "" });
+       dispatch({ type: 'boolean', name: "isDispatchEnabled", boolean: false });
      }
 
   const columnsConfig = [
-     {label:"Form ID", value: "formId" },
-      {label:"Menu Name", value: "title" }
+     {label:"Unit Name", value: "UnitName" },
+      {label:"Unit Location", value: "UnitLocation" },
+      {label:"Unit Code", value: "UnitCode" },
+      {label:"Enable Dispatch", value: "isDispatchEnabled" }
    ,
   //  { label: 'Active', value: 'isActive' }    
   ];
 
   const Validate = () => {
-      if (!state.formId) {
-    props.alert({ type: 'error', message: 'Please enter Form ID', show: true });
+      if (!state.UnitName) {
+    props.alert({ type: 'error', message: 'Please enter Unit Name', show: true });
     return;
   }
-     if (!state.title) {
-    props.alert({ type: 'error', message: 'Please enter Menu Name', show: true });
+//      if (!state.UnitLocation) {
+//     props.alert({ type: 'error', message: 'Please enter Unit Location', show: true });
+//     return;
+//   }
+  if (!state.UnitCode) {
+    props.alert({ type: 'error', message: 'Please enter Unit Code', show: true });
     return;
   }
          showAlert()
@@ -309,39 +297,37 @@ const DeleteAlert = (row) => {
 
     const updateData = {
       _id: state._id, 
-      parentFormId : state.parentId ,
-            formId : state.formId,
-          title : state.title,
-          sortOrder :  state.sortOrder
+            UnitName : state.UnitName,
+          UnitLocation : state.UnitLocation,
+          UnitCode : state.UnitCode,
         //  isActive:active
     };
     const saveData={
-          parentFormId : state.parentId ,
-          formId : state.formId,
-          title : state.title,
-          sortOrder :  state.sortOrder
+            UnitName : state.UnitName,
+          UnitLocation : state.UnitLocation,
+          UnitCode : state.UnitCode,
           // isActive:active
     }
 
     try {
       if (isEdit) {
-        await updateMenu(updateData);
-        props.alert({ type: 'success', message: 'Menu Updated successfully!', show: true });
+        await updateUnit(updateData);
+        props.alert({ type: 'success', message: 'Unit Updated successfully!', show: true });
       } else {
-        await createMenu(saveData);
-        props.alert({ type: 'success', message: 'Menu created successfully!', show: true });
+        await createUnit(saveData);
+        props.alert({ type: 'success', message: 'Unit created successfully!', show: true });
       }
       clear();
-      getMenu();
+      getUnit();
     } catch (error) {
-      throw new Error(isEdit ? 'Failed to update Menu.' : 'Failed to create Menu.');
+      throw new Error(isEdit ? 'Failed to update Unit.' : 'Failed to create Unit.');
     }
   };
 
-  const getMenu = async () => {
+  const getUnit = async () => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/getAllMenus";
+      let url = config.Api + "Unit/getAllUnits";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -351,11 +337,11 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Menu');
+        throw new Error('Failed to get Unit');
       }
       setLoading(false);
       const result = await response.json();
-      setMenu(result)
+      setUnit(result)
       setFilteredData(result);
     } catch (error) {
       console.error('Error:', error);
@@ -363,10 +349,10 @@ const DeleteAlert = (row) => {
     }
   }
 
-  const createMenu = async (data) => {
+  const createUnit = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/createMenu";
+      let url = config.Api + "Unit/createUnit";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -376,7 +362,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to create Menu');
+        throw new Error('Failed to create Unit');
       }
       const result = await response.json();
       return result;
@@ -386,10 +372,10 @@ const DeleteAlert = (row) => {
     }
   };
   
-  const updateMenu = async (data) => {
+  const updateUnit = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/updateMenu";
+      let url = config.Api + "Unit/updateUnit";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -399,7 +385,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to update Menu');
+        throw new Error('Failed to update Unit');
       }
 
       const result = await response.json();
@@ -420,36 +406,9 @@ const DeleteAlert = (row) => {
     } else if (fieldType === "date") {
       dispatch({ type: 'text', name: name, value: e });
     } else if (fieldType === "select") {
-  if (name === 'ParentMenuID') {
-        dispatch({ type: 'text', name: 'parentId', value: e.formId });
-        dispatch({ type: 'text', name: "ParentName", value: e.title });
-      }
+
     }
   }, []);
-  const getParentList = async () => {
-    try {
-      let url = config.Api + "Menu/getAllParentsMenu/";
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get State');
-      }
-
-      const result = await response.json();
-      SetData(result.data)
-      // setState(result)
-      // setFilteredData(result)
-    } catch (error) {
-      console.error('Error:', error);
-      throw error;
-    }
-  }
 
   const editTable = (data) => {
     setShowEntry(true);
@@ -457,15 +416,14 @@ const DeleteAlert = (row) => {
     setIsEdit(true);
     // setActive(data.isActive);
     dispatch({ type: 'text', name: '_id', value: data._id ? data._id : '' });
-    dispatch({ type: 'text', name: "parentId", value: data.parentFormId ? data.parentFormId : '' });
-    dispatch({ type: 'text', name: "ParentName", value: data.parentTitle ? data.parentTitle : '' });
-    dispatch({ type: 'text', name: "sortOrder", value: data.sortOrder ? data.sortOrder : '' });
-        dispatch({ type: 'text', name: "formId", value: data.formId ? data.formId : '' });
-       dispatch({ type: 'text', name: "title", value: data.title ? data.title : '' });
+        dispatch({ type: 'text', name: "UnitName", value: data.UnitName ? data.UnitName : '' });
+       dispatch({ type: 'text', name: "UnitLocation", value: data.UnitLocation ? data.UnitLocation : '' });
+       dispatch({ type: 'text', name: "UnitCode", value: data.UnitCode ? data.UnitCode : '' });
+       dispatch({ type: 'boolean', name: "isDispatchEnabled", boolean: data.isDispatchEnabled ? data.isDispatchEnabled : false });
      }
   const deleteRow = async (data) => {
     try {
-      let url = config.Api + "Menu/deleteMenu";
+      let url = config.Api + "Unit/deleteUnit";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -475,11 +433,11 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete Menu');
+        throw new Error('Failed to delete Unit');
       }
 
       const result = await response.json();
-      getMenu();
+      getUnit();
       return result;
     } catch (error) {
       console.error('Error:', error);
@@ -487,9 +445,10 @@ const DeleteAlert = (row) => {
     }
   }
   const handleView = (row) => {
-    setViewData({"Form ID":row.formId,
-                 "Menu Name":row.title,
-                 "Parent":row.ParentName,
+    setViewData({"Unit Name":row.UnitName,
+                 "Unit Location":row.UnitLocation,
+                 "Unit Code":row.UnitCode,
+                 "Dispatch Enabled":`${row.isDispatchEnabled ? "Yes" : "No"}`
                 })
   setOpen(true)
 };
@@ -497,7 +456,7 @@ const DeleteAlert = (row) => {
     <>
     <ViewDataModal open={open} onClose={() => setOpen(false)} data={Viewdata} />
       <Loading loading={loading}>
-        {showentry && 
+        {showentry && (
           <div className='entryParentDiv'>
             {props.alert?.show && (
               <Stack className='Stackstyle' spacing={2}>
@@ -551,84 +510,74 @@ const DeleteAlert = (row) => {
              
               <div className="entryfirstcolmn">
                 <div >
-                  <GridContainer spacing={2} style={{width:'100%'}}>
-                                          <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'38%'}}>
+                  <GridContainer spacing={2}>
+                     <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'400px'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="formId"
-                     name="formId"
+                     id="UnitCode"
+                     name="UnitCode"
                      type='text'
-                     label="Menu ID"
-                     value={state.formId}
-                     length={10}
-                     onChange={(e, value) => { storeDispatch(value, "formId", "text") }}
+                     label="Unit Code"
+                     value={state.UnitCode}
+                     length={200}
+                     onChange={(e, value) => { storeDispatch(value, "UnitCode", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "formId",value:""});}}
+                      dispatch({type:'text',name: "UnitCode",value:""});}}
                     }
                    /> 
                </GridItem>
-                                                     <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'38%'}}>
+                  <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'400px'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="title"
-                     name="title"
+                     id="UnitName"
+                     name="UnitName"
                      type='text'
-                     label="Menu Name"
-                     value={state.title}
+                     label="Unit Name"
+                     value={state.UnitName}
                      length={50}
-                     onChange={(e, value) => { storeDispatch(value, "title", "text") }}
+                     onChange={(e, value) => { storeDispatch(value, "UnitName", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "title",value:""});}}
+                      dispatch({type:'text',name: "UnitName",value:""});}}
                     }
                    /> 
                </GridItem>
-                <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'38%'}}>
-                  <div>
-                    <label><b>Parent Menu</b></label>
-                    <DropDown
-                      options={Data}
-                      heading={["Parent Menu"]}
-                      fieldName="Parent Menu"
-                      refid={'formId'}
-                      refname={["title"]}
-                      Visiblefields={["title"]}
-                      height="35px"
-                      onChange={() => { getParentList() }}
-                      getKey={(e) => { storeDispatch(e, 'ParentMenuID', 'select') }}
-                      totalCount={Data.length}
-                      loading={true}
-                      value={state.ParentName}
-                      clear={(e) => {
-                        if (e) {
-                          dispatch({ type: 'text', name: 'ParentID', value: "" });
-                          dispatch({ type: 'text', name: "ParentName", value: "" });
-                        }
-                      }}
+                                                     {/* <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'390px'}}> 
+                       <TextFieldCustom                    
+                       mandatory={true}
+                     id="UnitLocation"
+                     name="UnitLocation"
+                     type='text'
+                     label="Unit Location"
+                     value={state.UnitLocation}
+                     length={50}
+                     onChange={(e, value) => { storeDispatch(value, "UnitLocation", "text") }}
+                     clear={(e) => { if(e){ 
+                      dispatch({type:'text',name: "UnitLocation",value:""});}}
+                    }
+                   /> 
+               </GridItem> */}
+               {/* <GridItem xs={6} md={6} lg={6} sm={6} style={{display:'flex',justifyContent:'flex-start',alignItems:'center',width:'390px'}}>
+                <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={state.isDispatchEnabled}  
+                          onChange={(event) => {
+                            storeDispatch(event.target.checked, "isDispatchEnabled", "boolean")
+                          }}
+                          color="secondary"
+                        />
+                      }
+                      label={state.isDispatchEnabled ? "Dispatch Enabled" : "Dispatch Disabled"}  
                     />
-                    </div>
-                    </GridItem>
-<GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'38%'}}>
-                       <TextFieldCustom                    
-                       mandatory={false}
-                     id="sortOrder"
-                     name="sortOrder"
-                     type='text'
-                     label="Order"
-                     value={state.sortOrder}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "sortOrder", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "sortOrder",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-           
-                                                </GridContainer>
+                  </FormGroup>
+                  </GridItem> */}
+                    </GridContainer>
                 </div>
               </div>
             </div>
-          </div>}
-          <div className={showentry ? 'MenuTabelAndAddDivActive' : 'TabelAndAddDiv'} >
+          </div>)}
+          <div className={showentry ? 'TabelAndAddDivActive' : 'TabelAndAddDiv'}>
           <div className='AddbtnDivMain'>
           <div className='badgesection'>
           </div>
@@ -646,14 +595,14 @@ const DeleteAlert = (row) => {
                   handleSearchChange(Event.target.value)
                 }}
               />
-              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(Menu)}} /> : <FaSearch className="FaSearchdiv" />}
+              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(Unit)}} /> : <FaSearch className="FaSearchdiv" />}
             </div>
-          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Menu List'} />
-                    <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
-                               <StyledTooltip title={"Refresh Table"} placement="top">
-                              <TbRefresh onClick={()=>{if(!searchTerm){getMenu()}}}/>
-                              </StyledTooltip>
-                              </div>
+          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Unit List'} />
+          <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
+                     <StyledTooltip title={"Refresh Table"} placement="top">
+                    <TbRefresh onClick={()=>{if(!searchTerm){getUnit()}}}/>
+                    </StyledTooltip>
+                    </div>
             </div>
             <div className='AddbtnDiv'>
               {(
@@ -673,10 +622,10 @@ const DeleteAlert = (row) => {
             Deletedisabled
           /> */}
            <DataTable
-      // title="Menu List"
+      // title="Unit List"
       columns={columns}
       data={filteredData}
-      // data={Menu}
+      // data={Unit}
       pagination
       highlightOnHover
       responsive

@@ -101,7 +101,7 @@ const renderValue = (value, level = 0) => {
   return <Typography variant="body2">{String(value)}</Typography>;
 };
 
-const ViewDataModal = ({ open, onClose, data }) => {
+const ViewDataModal = ({ open, onClose, data ,header}) => {
   if (!data || typeof data !== 'object') return null;
 
   return (
@@ -126,7 +126,7 @@ const ViewDataModal = ({ open, onClose, data }) => {
                 backgroundColor:'#eae7e7'
               }}
             >
-              <Typography variant="h6"><b>View Data</b></Typography>
+              <Typography variant="h6"><b>{header ? header : 'View Data'}</b></Typography>
               <IconButton onClick={onClose}>
                 <CloseIcon />
               </IconButton>

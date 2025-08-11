@@ -1,8 +1,8 @@
-import { IoHomeOutline,   IoBarChartOutline, IoSettingsOutline } from "react-icons/io5";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdOutlineShoppingCart } from "react-icons/md";
-import { PiSuitcaseSimpleLight } from "react-icons/pi";
-
+import { LuLandPlot } from "react-icons/lu";
+import { RiAdminFill } from "react-icons/ri";
+import { MdOutlineFormatListBulleted } from "react-icons/md";
+import { MdDashboard } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
 
 export const allUnits = [
   { name: 'Head Office', formId: '1018' ,UnitId:'684fee05f58e7b161f931f30'},
@@ -15,35 +15,43 @@ export const sidebarMenu = [
   {
     title: 'Dashboard',
     formId:1000,
-    icon: <IoHomeOutline />,
+    icon: <MdDashboard />,
     children: [],
-    roles: ['admin', 'employee'],
+    roles: ['admin', 'agent'],
      UnitAccess: ['Head Office','Unit 1'],
   },
   {
     title: 'Plots',
-    icon:<FaShoppingCart />,
+    icon:<LuLandPlot />,
     children: [
-     { title: 'Plot List' ,formId:'1008',roles: ['admin', 'employee'],UnitAccess: ['Head Office','Unit 1'],},
-     { title: 'Plot View' ,formId:'1010',roles: ['admin', 'employee'],UnitAccess: ['Head Office','Unit 1'],},
+     { title: 'Plot List' ,formId:'1005',roles: ['admin', 'agent'],UnitAccess: ['Head Office','Unit 1'],},
+     { title: 'Plot View' ,formId:'1006',roles: ['admin', 'agent'],UnitAccess: ['Head Office','Unit 1'],},
     ],
-    roles: ['admin', 'employee'],
+    roles: ['admin', 'agent'],
+    UnitAccess: ['Head Office','Unit 1'],
+  },
+    {
+    title: 'Visitor',
+    icon:<FaUsers />,
+    children: [
+     { title: 'Visitors' ,formId:'1002',roles: ['admin'],UnitAccess: ['Head Office']}
+    ],
+    roles: ['admin', 'agent'],
     UnitAccess: ['Head Office','Unit 1'],
   },
   {
     title: 'Master forms',
-    icon: <PiSuitcaseSimpleLight />,
+    icon: <MdOutlineFormatListBulleted />,
     children: [
-      //  { title: 'Unit' ,formId:'1001',roles: ['admin'],UnitAccess: ['Head Office'],},
-      //  { title: 'Department' ,formId:'1002',roles: ['admin'],UnitAccess: ['Head Office'],},
-       { title: 'Employee' ,formId:'1003',roles: ['admin'],UnitAccess: ['Head Office'],},
-      //  { title: 'Brand' ,formId:'1004',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
+       { title: 'Unit' ,formId:'1004',roles: ['admin'],UnitAccess: ['Head Office'],},
+       { title: 'State' ,formId:'1007',roles: ['admin'],UnitAccess: ['Head Office'],},
+       { title: 'City' ,formId:'1008',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
+       { title: 'Employee' ,formId:'1009',roles: ['admin'],UnitAccess: ['Head Office'],},
       //  { title: 'Category' ,formId:'1005',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
       //  { title: 'Child Product' ,formId:'1006',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
       //  { title: 'Parent Product' ,formId:'1007',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
       //  { title: 'Main Parent' ,formId:'1009',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
-       { title: 'Visitors' ,formId:'1011',roles: ['admin'],UnitAccess: ['Head Office'],},
-      //  { title: 'Product Type' ,formId:'1012',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
+       { title: 'Plot Status' ,formId:'1003',roles: ['admin'],UnitAccess: ['Head Office'],},
       //  { title: 'Add Plot' ,formId:'1009',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
     ],
     roles: ['admin'],
@@ -66,7 +74,7 @@ export const sidebarMenu = [
   //  UnitAccess: ['Head Office', 'Unit 1', 'Unit 2', 'Unit 3'],
   // },
   {title: 'Admin Panel',
-    icon: <MdOutlineShoppingCart />,
+    icon: <RiAdminFill />,
     children: [{ title: 'Menu Registry' ,formId:'1001',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
   { title: 'User Rights' ,formId:'1023',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],}
   ],

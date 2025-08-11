@@ -9,13 +9,15 @@ import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
 import { FaSearch } from "react-icons/fa";
 // import ClearIcon from '@material-ui/icons/Clear';
+import CustomDatePicker from '../../../Components/CustomComponents/DatePicker';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { config } from '../../../Components/CustomComponents/config';
 import Switch from '@mui/material/Switch';
-import { Checkbox, FormGroup, FormControlLabel, FormLabel, Box } from '@mui/material';
+import FormGroup from '@mui/material/FormGroup';
 import ToggleSwitch from '../../../Components/CustomComponents/toggleSwitch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import ExportTableToExcel from "../../../Components/CustomComponents/ExportTableToExcel";
 import GridContainer from '../../../Components/CustomComponents/GridContainer';
 import GridItem from '../../../Components/CustomComponents/GridItem';
@@ -28,50 +30,30 @@ import StyledTooltip from '../../../Components/CustomComponents/Tooltip'
 import ViewDataModal from '../../../Components/CustomComponents/ViewData';
 
 const initialState = {
-  _id: '',
-  parentId:'',
-  ParentName:'',
-    formId:'',
-   title:'',
-   sortOrder:''
+    _id: '',
+    CityCode:'',
+   CityName:'',
+   StateID:'',
+   StateName:''
  }
-export default function MenuRegistryTable(props) {
-  const headers = ["Form ID","Menu Name",'Active']
-  const TableVisibleItem = ["formId","title",'isActive']
+export default function CityTable(props) {
+  const headers = ["City Code","State",'Active']
+  const TableVisibleItem = ["CityCode","StateName",'isActive']
   const [open, setOpen] = useState(false);
     const [Viewdata,setViewData] = useState({})
 const columns = [
   {
-    name: 'Form ID',
-    selector: row => row.formId,
-    sortable: true,
-    width: '20%',
-  },
-  {
-    name: 'Menu Name',
-    selector: row => row.title,
+    name: 'State',
+    selector: row => row.StateName,
     sortable: true,
     width: '30%',
   },
-//   {
-//     name: 'Parent Name',
-//     selector: row => row.ParentName,
-//     sortable: false,
-//     width: '30%',
-//   },
-  // {
-  //   name: 'Active',
-  //   selector: row => row.isActive,
-  //   sortable: true,
-  //   cell: row => (
-  //     <FaCircle
-  //       color={row.isActive ? 'green' : 'red'}
-  //       title={row.isActive ? 'Active' : 'Inactive'}
-  //       size={12}
-  //     />
-  //   ),
-  //   center: true,
-  // },
+   {
+    name: 'City Name',
+    selector: row => row.CityName,
+    sortable: true,
+    width: '30%',
+  },
   {
     name: 'Actions',
     cell: row => (
@@ -107,15 +89,25 @@ const columns = [
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  const [Menu, setMenu] = useState([])
+  const [City, setCity] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
+  const [filterValue,setFilterValue] = useState('')
   const [Data, SetData] = useState([])
+  const [Facing,setFacing] = useState([{FacingIDPK:1,FacingName:"South"},
+    {FacingIDPK:2,FacingName:"North"},
+    {FacingIDPK:3,FacingName:"West"},
+    {FacingIDPK:4,FacingName:"East"},
+    {FacingIDPK:5,FacingName:"NE"},
+    {FacingIDPK:6,FacingName:"NW"},
+    {FacingIDPK:7,FacingName:"SE"},
+    {FacingIDPK:8,FacingName:"SW"}
+  ])
   const [active, setActive] = useState(true);
 
   useEffect(() => {
-    getMenu()
+    getCity()
   }, [])
 
   const debounce = (func, delay) => {
@@ -131,18 +123,18 @@ const columns = [
   const handleSearchChange = (
     debounce((value) => {
       setSearchTerm(value);
-      if (Menu.length > 0) {
+      if (City.length > 0) {
         applySearchFilter(value);
       }
     }, 300)
   );
 
   const applySearchFilter = (search) => {
-    if (Menu.length === 0) {
+    if (City.length === 0) {
       return;
     }
 
-    let data = [...Menu];
+    let data = [...City];
     const filtered = data.filter((row) =>
       Object.values(row).some((value) =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
@@ -163,27 +155,29 @@ const columns = [
     setIsEdit(false);
     setActive(true);
     dispatch({ type: 'text', name: '_id', value: "" });
-    dispatch({ type: 'text', name: "parentId", value: "" });
-    dispatch({ type: 'text', name: "ParentName", value: "" });
-        dispatch({ type: 'text', name: "formId", value: "" });
-       dispatch({ type: 'text', name: "title", value: "" });
-       dispatch({ type: 'text', name: "sortOrder", value: "" });
+        dispatch({ type: 'text', name: "CityCode", value: "" });
+        dispatch({ type: 'text', name: "CityName", value: "" });
+       dispatch({ type: 'text', name: "StateId", value: "" });
      }
 
   const columnsConfig = [
-     {label:"Form ID", value: "formId" },
-      {label:"Menu Name", value: "title" }
+     {label:"City Code", value: "CityCode" },
+      {label:"State", value: "StateName" }
    ,
   //  { label: 'Active', value: 'isActive' }    
   ];
 
   const Validate = () => {
-      if (!state.formId) {
-    props.alert({ type: 'error', message: 'Please enter Form ID', show: true });
+      if (!state.CityCode) {
+    props.alert({ type: 'error', message: 'Please enter City Code', show: true });
     return;
   }
-     if (!state.title) {
-    props.alert({ type: 'error', message: 'Please enter Menu Name', show: true });
+        if (!state.CityName) {
+    props.alert({ type: 'error', message: 'Please enter City Name', show: true });
+    return;
+  }
+     if (!state.StateID) {
+    props.alert({ type: 'error', message: 'Please Select State', show: true });
     return;
   }
          showAlert()
@@ -308,40 +302,36 @@ const DeleteAlert = (row) => {
     props.alert({ type: '', message: '', show: false });
 
     const updateData = {
-      _id: state._id, 
-      parentFormId : state.parentId ,
-            formId : state.formId,
-          title : state.title,
-          sortOrder :  state.sortOrder
-        //  isActive:active
+      _id: state._id,       
+      StateID : state.StateID ,
+      CityCode : state.CityCode,
+      CityName : state.CityName,
     };
     const saveData={
-          parentFormId : state.parentId ,
-          formId : state.formId,
-          title : state.title,
-          sortOrder :  state.sortOrder
-          // isActive:active
+          CityName:state.CityName,
+          CityCode : state.CityCode,
+          StateID:state.StateID
     }
 
     try {
       if (isEdit) {
-        await updateMenu(updateData);
-        props.alert({ type: 'success', message: 'Menu Updated successfully!', show: true });
+        await updateCity(updateData);
+        props.alert({ type: 'success', message: 'City Updated successfully!', show: true });
       } else {
-        await createMenu(saveData);
-        props.alert({ type: 'success', message: 'Menu created successfully!', show: true });
+        await createCity(saveData);
+        props.alert({ type: 'success', message: 'City created successfully!', show: true });
       }
       clear();
-      getMenu();
+      getCity();
     } catch (error) {
-      throw new Error(isEdit ? 'Failed to update Menu.' : 'Failed to create Menu.');
+      throw new Error(isEdit ? 'Failed to update City.' : 'Failed to create City.');
     }
   };
 
-  const getMenu = async () => {
+  const getCity = async () => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/getAllMenus";
+      let url = config.Api + "City/getAllCitys";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -351,11 +341,11 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Menu');
+        throw new Error('Failed to get Citys');
       }
       setLoading(false);
       const result = await response.json();
-      setMenu(result)
+      setCity(result)
       setFilteredData(result);
     } catch (error) {
       console.error('Error:', error);
@@ -363,10 +353,10 @@ const DeleteAlert = (row) => {
     }
   }
 
-  const createMenu = async (data) => {
+  const createCity = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/createMenu";
+      let url = config.Api + "City/createCity";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -376,7 +366,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to create Menu');
+        throw new Error('Failed to create City');
       }
       const result = await response.json();
       return result;
@@ -386,10 +376,10 @@ const DeleteAlert = (row) => {
     }
   };
   
-  const updateMenu = async (data) => {
+  const updateCity = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Menu/updateMenu";
+      let url = config.Api + "City/updateCity";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -399,7 +389,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to update Menu');
+        throw new Error('Failed to update City');
       }
 
       const result = await response.json();
@@ -420,15 +410,15 @@ const DeleteAlert = (row) => {
     } else if (fieldType === "date") {
       dispatch({ type: 'text', name: name, value: e });
     } else if (fieldType === "select") {
-  if (name === 'ParentMenuID') {
-        dispatch({ type: 'text', name: 'parentId', value: e.formId });
-        dispatch({ type: 'text', name: "ParentName", value: e.title });
+      if(name === 'StateID'){
+        dispatch({ type: 'text', name: "StateID", value: e.StateIDPK });
+        dispatch({ type: 'text', name: "StateName", value: e.StateName });
       }
     }
   }, []);
-  const getParentList = async () => {
+  const getStateList = async () => {
     try {
-      let url = config.Api + "Menu/getAllParentsMenu/";
+      let url = config.Api + "City/getAllStates/";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -450,22 +440,19 @@ const DeleteAlert = (row) => {
       throw error;
     }
   }
-
   const editTable = (data) => {
     setShowEntry(true);
     setHideAdd(false);
     setIsEdit(true);
     // setActive(data.isActive);
     dispatch({ type: 'text', name: '_id', value: data._id ? data._id : '' });
-    dispatch({ type: 'text', name: "parentId", value: data.parentFormId ? data.parentFormId : '' });
-    dispatch({ type: 'text', name: "ParentName", value: data.parentTitle ? data.parentTitle : '' });
-    dispatch({ type: 'text', name: "sortOrder", value: data.sortOrder ? data.sortOrder : '' });
-        dispatch({ type: 'text', name: "formId", value: data.formId ? data.formId : '' });
-       dispatch({ type: 'text', name: "title", value: data.title ? data.title : '' });
+        dispatch({ type: 'text', name: "CityCode", value: data.CityCode ? data.CityCode : '' });
+        dispatch({ type: 'text', name: "StateID", value: data.StateID ? data.StateID : '' });
+       dispatch({ type: 'text', name: "StateName", value: data.StateName ? data.StateName : '' });
      }
   const deleteRow = async (data) => {
     try {
-      let url = config.Api + "Menu/deleteMenu";
+      let url = config.Api + "City/deleteCity";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -475,11 +462,11 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete Menu');
+        throw new Error('Failed to delete City');
       }
 
       const result = await response.json();
-      getMenu();
+      getCity();
       return result;
     } catch (error) {
       console.error('Error:', error);
@@ -487,9 +474,8 @@ const DeleteAlert = (row) => {
     }
   }
   const handleView = (row) => {
-    setViewData({"Form ID":row.formId,
-                 "Menu Name":row.title,
-                 "Parent":row.ParentName,
+    setViewData({"City Code":row.CityCode,
+                 "State":row.StateName,
                 })
   setOpen(true)
 };
@@ -551,84 +537,69 @@ const DeleteAlert = (row) => {
              
               <div className="entryfirstcolmn">
                 <div >
-                  <GridContainer spacing={2} style={{width:'100%'}}>
-                                          <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'38%'}}>
+                  <GridContainer spacing={2}>
+                           <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="formId"
-                     name="formId"
+                     id="CityCode"
+                     name="CityCode"
                      type='text'
-                     label="Menu ID"
-                     value={state.formId}
-                     length={10}
-                     onChange={(e, value) => { storeDispatch(value, "formId", "text") }}
+                     label="City Code"
+                     value={state.CityCode}
+                     length={5}
+                     onChange={(e, value) => { storeDispatch(value, "CityCode", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "formId",value:""});}}
+                      dispatch({type:'text',name: "CityCode",value:""});}}
                     }
                    /> 
                </GridItem>
-                                                     <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'38%'}}>
+                <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="title"
-                     name="title"
+                     id="CityName"
+                     name="CityName"
                      type='text'
-                     label="Menu Name"
-                     value={state.title}
+                     label="City Name"
+                     value={state.CityName}
                      length={50}
-                     onChange={(e, value) => { storeDispatch(value, "title", "text") }}
+                     onChange={(e, value) => { storeDispatch(value, "CityName", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "title",value:""});}}
+                      dispatch({type:'text',name: "CityName",value:""});}}
                     }
                    /> 
                </GridItem>
-                <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'38%'}}>
+                <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
                   <div>
-                    <label><b>Parent Menu</b></label>
+                    <label><b>State</b></label>
+                    <span style={{ color: "red" }}>*</span>
                     <DropDown
                       options={Data}
-                      heading={["Parent Menu"]}
-                      fieldName="Parent Menu"
-                      refid={'formId'}
-                      refname={["title"]}
-                      Visiblefields={["title"]}
+                      heading={["State"]}
+                      fieldName="State"
+                      refid={'_Id'}
+                      refname={["StateName"]}
+                      Visiblefields={["StateName"]}
                       height="35px"
-                      onChange={() => { getParentList() }}
-                      getKey={(e) => { storeDispatch(e, 'ParentMenuID', 'select') }}
+                      onChange={() => { getStateList() }}
+                      getKey={(e) => { storeDispatch(e, 'StateID', 'select') }}
                       totalCount={Data.length}
                       loading={true}
-                      value={state.ParentName}
+                      value={state.StateName}
                       clear={(e) => {
                         if (e) {
-                          dispatch({ type: 'text', name: 'ParentID', value: "" });
-                          dispatch({ type: 'text', name: "ParentName", value: "" });
+                          dispatch({ type: 'text', name: 'StateID', value: "" });
+                          dispatch({ type: 'text', name: "StateName", value: "" });
                         }
                       }}
                     />
                     </div>
                     </GridItem>
-<GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'38%'}}>
-                       <TextFieldCustom                    
-                       mandatory={false}
-                     id="sortOrder"
-                     name="sortOrder"
-                     type='text'
-                     label="Order"
-                     value={state.sortOrder}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "sortOrder", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "sortOrder",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-           
                                                 </GridContainer>
                 </div>
               </div>
             </div>
           </div>}
-          <div className={showentry ? 'MenuTabelAndAddDivActive' : 'TabelAndAddDiv'} >
+          <div className={showentry ? 'CityTabelAndAddDivActive' : 'TabelAndAddDiv'}>
           <div className='AddbtnDivMain'>
           <div className='badgesection'>
           </div>
@@ -646,19 +617,19 @@ const DeleteAlert = (row) => {
                   handleSearchChange(Event.target.value)
                 }}
               />
-              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(Menu)}} /> : <FaSearch className="FaSearchdiv" />}
+              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(City)}} /> : <FaSearch className="FaSearchdiv" />}
             </div>
-          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Menu List'} />
+          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'City List'} />
                     <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
                                <StyledTooltip title={"Refresh Table"} placement="top">
-                              <TbRefresh onClick={()=>{if(!searchTerm){getMenu()}}}/>
+                              <TbRefresh onClick={()=>{if(!searchTerm){getCity()}}}/>
                               </StyledTooltip>
                               </div>
             </div>
             <div className='AddbtnDiv'>
               {(
                 // props.UserPermissions.isAdd && 
-                hideAdd) ? (
+              hideAdd) ? (
                 <Button variant="contained" onClick={() => { setShowEntry(!showentry); setHideAdd(!hideAdd); clear() }} className="ButtonStyle">Add</Button>
               ):''}
             </div>
@@ -673,10 +644,10 @@ const DeleteAlert = (row) => {
             Deletedisabled
           /> */}
            <DataTable
-      // title="Menu List"
+      // title="City List"
       columns={columns}
       data={filteredData}
-      // data={Menu}
+      // data={City}
       pagination
       highlightOnHover
       responsive
