@@ -9,7 +9,6 @@ import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
 import { FaSearch } from "react-icons/fa";
 // import ClearIcon from '@material-ui/icons/Clear';
-import CustomDatePicker from '../../../Components/CustomComponents/DatePicker';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -28,86 +27,136 @@ import '../../../Assets/app.css'
 import { TbRefresh } from "react-icons/tb";
 import StyledTooltip from '../../../Components/CustomComponents/Tooltip'
 import ViewDataModal from '../../../Components/CustomComponents/ViewData';
+import { decode as base64_decode, encode as base64_encode} from "base-64";
+import MenuListing from './MenuList'
 
 const initialState = {
-    _id: '',
-    CityCode:'',
-   CityName:'',
-   StateID:'',
-   StateName:''
+  _id: '',
+  unitId:'',
+  UnitName:'',
+  employeeId:'',
+   EmployeeName:''
  }
-export default function CityTable(props) {
-  const headers = ["City Code","State",'Active']
-  const TableVisibleItem = ["CityCode","StateName",'isActive']
+export default function UserRightsTable(props) {
   const [open, setOpen] = useState(false);
     const [Viewdata,setViewData] = useState({})
 const columns = [
   {
-    name: 'State',
-    selector: row => row.StateName,
+    name: 'Employee Code',
+    selector: row => row.employeeCode,
     sortable: true,
-    width: '30%',
+    width: '25%',
   },
-   {
-    name: 'City Name',
-    selector: row => row.CityName,
+  {
+    name: 'Employee Name',
+    selector: row => row.employeeName,
     sortable: true,
-    width: '30%',
+    width: '25%',
   },
+  {
+    name: 'Role',
+    selector: row => row.employeeRole,
+    sortable: true,
+    width: '25%',
+  },
+  // {
+  //   name: 'Add',
+  //   selector: row => row.isAdd,
+  //   sortable: true,
+  //   cell: row => (
+  //     <FaCircle
+  //       color={row.isAdd ? 'green' : 'red'}
+  //       title={row.isAdd ? 'Enabled' : 'Disabled'}
+  //       size={12}
+  //     />
+  //   ),
+  //   center: true,
+  // },
+  //  {
+  //   name: 'Edit',
+  //   selector: row => row.isEdit,
+  //   sortable: true,
+  //   cell: row => (
+  //     <FaCircle
+  //       color={row.isEdit ? 'green' : 'red'}
+  //       title={row.isEdit ? 'Enabled' : 'Disabled'}
+  //       size={12}
+  //     />
+  //   ),
+  //   center: true,
+  // },
+  //    {
+  //   name: 'View',
+  //   selector: row => row.isView,
+  //   sortable: true,
+  //   cell: row => (
+  //     <FaCircle
+  //       color={row.isView ? 'green' : 'red'}
+  //       title={row.isView ? 'Enabled' : 'Disabled'}
+  //       size={12}
+  //     />
+  //   ),
+  //   center: true,
+  // },
+  //    {
+  //   name: 'Delete',
+  //   selector: row => row.isDelete,
+  //   sortable: true,
+  //   cell: row => (
+  //     <FaCircle
+  //       color={row.isDelete ? 'green' : 'red'}
+  //       title={row.isDelete ? 'Enabled' : 'Disabled'}
+  //       size={12}
+  //     />
+  //   ),
+  //   center: true,
+  // },
   {
     name: 'Actions',
     cell: row => (
       <div style={{ display: 'flex', gap: '20px' }}>
-        {props.UserPermissions.isView &&<FaEye
+        {/* <FaEye
           onClick={() => handleView(row)}
           style={{ cursor: 'pointer', color: '#007bff' }}
           title="View"
-        />}
-        {props.UserPermissions.isEdit &&<FaEdit
+        /> */}
+        <FaEdit
           onClick={() => editTable(row)}
           style={{ cursor: 'pointer', color: '#ffc107' }}
           title="Edit"
-        />}
-        {props.UserPermissions.isDelete &&<FaTrash
+        />
+        {/* <FaTrash
           onClick={() => DeleteAlert(row)}
           style={{ cursor: 'pointer', color: '#dc3545' }}
           title="Delete"
-        />}
-        {(!props.UserPermissions.isView && !props.UserPermissions.isEdit && !props.UserPermissions.isDelete) && 
-        <p>-</p>
-        }
+        /> */}
       </div>
     ),
     ignoreRowClick: true,
     allowOverflow: true,
     button: true,
-    width: '20%',
+    width: '25%',
   },
 ];
 
-  const [showentry, setShowEntry] = useState('')
+
+  const [showentry, setShowEntry] = useState(false)
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  const [City, setCity] = useState([])
+  const [UserRights, setParentProduct] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [filterValue,setFilterValue] = useState('')
   const [Data, SetData] = useState([])
-  const [Facing,setFacing] = useState([{FacingIDPK:1,FacingName:"South"},
-    {FacingIDPK:2,FacingName:"North"},
-    {FacingIDPK:3,FacingName:"West"},
-    {FacingIDPK:4,FacingName:"East"},
-    {FacingIDPK:5,FacingName:"NE"},
-    {FacingIDPK:6,FacingName:"NW"},
-    {FacingIDPK:7,FacingName:"SE"},
-    {FacingIDPK:8,FacingName:"SW"}
-  ])
+  const [Menu, SetMenu] = useState([])
+  const [MenuAction,setMenuAction] = useState([])
+  const [ProductDetails,setProductDetails] = useState({ProductCode:'',UnitName:'',ProductIDPK:'',ProductVisibleCode:'',ProductVisibleName:''})
+
   const [active, setActive] = useState(true);
 
   useEffect(() => {
-    getCity()
+    getAllUserRights()
   }, [])
 
   const debounce = (func, delay) => {
@@ -123,18 +172,18 @@ const columns = [
   const handleSearchChange = (
     debounce((value) => {
       setSearchTerm(value);
-      if (City.length > 0) {
+      if (UserRights.length > 0) {
         applySearchFilter(value);
       }
     }, 300)
   );
 
   const applySearchFilter = (search) => {
-    if (City.length === 0) {
+    if (UserRights.length === 0) {
       return;
     }
 
-    let data = [...City];
+    let data = [...UserRights];
     const filtered = data.filter((row) =>
       Object.values(row).some((value) =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
@@ -155,30 +204,24 @@ const columns = [
     setIsEdit(false);
     setActive(true);
     dispatch({ type: 'text', name: '_id', value: "" });
-        dispatch({ type: 'text', name: "CityCode", value: "" });
-        dispatch({ type: 'text', name: "CityName", value: "" });
-       dispatch({ type: 'text', name: "StateID", value: "" });
-       dispatch({ type: 'text', name: "StateName", value: "" });
+    dispatch({ type: 'text', name: "unitId", value: "" });
+    dispatch({ type: 'text', name: "UnitName", value: "" });
+    dispatch({ type: 'text', name: "employeeId", value: "" });
+       dispatch({ type: 'text', name: "EmployeeName", value: "" });
+       SetMenu([])
+       setMenuAction([])
      }
 
   const columnsConfig = [
-     {label:"City Code", value: "CityCode" },
-      {label:"State", value: "StateName" }
+     {label:"UserRights Code", value: "mainParentProductCode" },
+      {label:"UserRights Name", value: "mainParentProductName" }
    ,
   //  { label: 'Active', value: 'isActive' }    
   ];
 
   const Validate = () => {
-      if (!state.CityCode) {
-    props.alert({ type: 'error', message: 'Please enter City Code', show: true });
-    return;
-  }
-        if (!state.CityName) {
-    props.alert({ type: 'error', message: 'Please enter City Name', show: true });
-    return;
-  }
-     if (!state.StateID) {
-    props.alert({ type: 'error', message: 'Please Select State', show: true });
+    if (!state.employeeId) {
+    props.alert({ type: 'error', message: 'Please select Employee', show: true });
     return;
   }
          showAlert()
@@ -187,7 +230,7 @@ const columns = [
   const showAlert = () => {
     Swal.fire({
       title: 'Are you sure?',
-      text: isEdit ? 'Do you really want to Update this data?' : 'Do you really want to save this data?',
+      text: isEdit ? 'Do you really want to Update this data?' : 'Do you really want to add this data?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -302,51 +345,41 @@ const DeleteAlert = (row) => {
   const handleSubmit = async () => {
     props.alert({ type: '', message: '', show: false });
 
-    const updateData = {
-      _id: state._id,       
-      StateID : state.StateID ,
-      CityCode : state.CityCode,
-      CityName : state.CityName,
-    };
+    const updateData={
+      _id:state._id,
+      employeeId:state.employeeId,
+      menus:MenuAction         
+    }
     const saveData={
-          CityName:state.CityName,
-          CityCode : state.CityCode,
-          StateID:state.StateID
+      employeeId:state.employeeId,
+      menus:MenuAction
     }
-
-    try {
-      if (isEdit) {
-        await updateCity(updateData);
-        props.alert({ type: 'success', message: 'City Updated successfully!', show: true });
-      } else {
-        await createCity(saveData);
-        props.alert({ type: 'success', message: 'City created successfully!', show: true });
-      }
-      clear();
-      getCity();
-    } catch (error) {
-      throw new Error(isEdit ? 'Failed to update City.' : 'Failed to create City.');
+    if(!isEdit){
+      AddUserRights(saveData)
+    }else{
+updateUserRights(updateData)
     }
+   
   };
 
-  const getCity = async () => {
+  const getAllUserRights = async () => {
     try {
       setLoading(true);
-      let url = config.Api + "City/getAllCitys";
+      let url = config.Api + "UserRights/getAllUserRights";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({unitId: state.unitId}),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Citys');
+        throw new Error('Failed to get UserRights');
       }
       setLoading(false);
       const result = await response.json();
-      setCity(result)
+      setParentProduct(result)
       setFilteredData(result);
     } catch (error) {
       console.error('Error:', error);
@@ -354,10 +387,10 @@ const DeleteAlert = (row) => {
     }
   }
 
-  const createCity = async (data) => {
+  const AddUserRights = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "City/createCity";
+      let url = config.Api + "UserRights/createUserRights/";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -367,20 +400,23 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to create City');
+        throw new Error('Failed to create Employee');
       }
       const result = await response.json();
+      getAllUserRights()
+     clear()
+     setShowEntry(false)
       return result;
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   };
-  
-  const updateCity = async (data) => {
+
+  const updateUserRights = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "City/updateCity";
+      let url = config.Api + "UserRights/updateUserRights/";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -389,11 +425,14 @@ const DeleteAlert = (row) => {
         body: JSON.stringify(data),
       });
       setLoading(false);
-      if (!response.ok) {
-        throw new Error('Failed to update City');
+      if (response.status === 400) {
+        const result = await response.json();
+        throw new Error(result.message);
       }
-
       const result = await response.json();
+      getAllUserRights()
+      clear()
+      setShowEntry(false)
       return result;
     } catch (error) {
       console.error('Error:', error);
@@ -401,7 +440,7 @@ const DeleteAlert = (row) => {
     }
   };
 
-  const storeDispatch = useCallback(async (e, name, fieldType) => {
+  const storeDispatch = useCallback(async (e, name, fieldType,productidpk,productname) => {
     if (fieldType === "text") {
       dispatch({ type: fieldType, name: name, value: e });
     } else if (fieldType === "number") {
@@ -411,49 +450,103 @@ const DeleteAlert = (row) => {
     } else if (fieldType === "date") {
       dispatch({ type: 'text', name: name, value: e });
     } else if (fieldType === "select") {
-      if(name === 'StateID'){
-        dispatch({ type: 'text', name: "StateID", value: e.StateIDPK });
-        dispatch({ type: 'text', name: "StateName", value: e.StateName });
+  if (name === 'UnitID') {
+        dispatch({ type: 'text', name: "UnitName", value: e.UnitName  });
+        dispatch({ type: 'text', name: 'unitId', value: e._id});
+        getAllMenus(e._id)
+      }else if (name === 'EmployeeID') {
+        dispatch({ type: 'text', name: "employeeId", value: e._id });
+        dispatch({ type: 'text', name: "EmployeeName", value: e.EmployeeName });
       }
     }
   }, []);
-  const getStateList = async () => {
+
+      const getAllEmployees = async () => {
+        try {
+          let url = config.Api + "UserRights/getAllEmployees/";
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({unitId: state.unitId}),
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to get State');
+          }
+    
+          const result = await response.json();
+          SetData(result)
+          // setState(result)
+        //   setFilteredData(result)
+        } catch (error) {
+          console.error('Error:', error);
+          throw error;
+        }
+      }
+      const getAllMenus = async (id) => {
+        try {
+          let url = config.Api + "UserRights/getAllMenus/";
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({unitId: id}),
+          });
+    
+          if (!response.ok) {
+            throw new Error('Failed to get State');
+          }
+    
+          const result = await response.json();
+          SetMenu(result)
+          // setState(result)
+        //   setFilteredData(result)
+        } catch (error) {
+          console.error('Error:', error);
+          throw error;
+        }
+      }
+  const getUserRights = async () => {
     try {
-      let url = config.Api + "City/getAllStates/";
+      let url = config.Api + "UserRights/getAllUserRights";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({unitId: state.unitId}),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get State');
+        throw new Error('Failed to get UserRights');
       }
-
       const result = await response.json();
-      SetData(result.data)
-      // setState(result)
-      // setFilteredData(result)
+      SetData(result)
+    //   setFilteredData(result);
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   }
+
   const editTable = (data) => {
     setShowEntry(true);
     setHideAdd(false);
     setIsEdit(true);
     // setActive(data.isActive);
     dispatch({ type: 'text', name: '_id', value: data._id ? data._id : '' });
-        dispatch({ type: 'text', name: "CityCode", value: data.CityCode ? data.CityCode : '' });
-        dispatch({ type: 'text', name: "StateID", value: data.StateID ? data.StateID : '' });
-       dispatch({ type: 'text', name: "StateName", value: data.StateName ? data.StateName : '' });
+    dispatch({ type: 'text', name: "unitId", value: data.unitId ? data.unitId : '' });
+    dispatch({ type: 'text', name: "UnitName", value: data.UnitName ? data.UnitName : '' });
+    dispatch({ type: 'text', name: "employeeId", value: data.employeeId ? data.employeeId : '' });
+    dispatch({ type: 'text', name: "EmployeeName", value: data.employeeName ? data.employeeName : '' });
+    SetMenu(data.menus)
      }
   const deleteRow = async (data) => {
     try {
-      let url = config.Api + "City/deleteCity";
+      let url = config.Api + "Employee/deleteEmployee";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -463,20 +556,25 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete City');
+        throw new Error('Failed to delete UserRights');
       }
 
       const result = await response.json();
-      getCity();
+      getUserRights();
       return result;
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   }
+  const getMenuAction=(val)=>{
+     setMenuAction(val)
+  }
   const handleView = (row) => {
-    setViewData({"City Code":row.CityCode,
-                 "State":row.StateName,
+    setViewData({"Employee Code":row.EmployeeCode,
+                 "Employee Name":row.EmployeeName,
+                 "Product":row.UnitName,
+                 "ProductType":row.EmployeeName,
                 })
   setOpen(true)
 };
@@ -519,7 +617,7 @@ const DeleteAlert = (row) => {
                     onClick={Validate}
                     className='ButtonStyle'
                   >
-                    {loading ? (isEdit ? 'Updating...' : 'Saving...') : (isEdit ? 'Update' : 'Save')}
+                    {loading ? (isEdit ? 'Updating...' : 'Adding...') : (isEdit ? 'Update' : 'Add User Rights')}
                   </Button>
                   <Button
                     variant="outlined"
@@ -539,73 +637,48 @@ const DeleteAlert = (row) => {
               <div className="entryfirstcolmn">
                 <div >
                   <GridContainer spacing={2}>
-                           <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="CityCode"
-                     name="CityCode"
-                     type='text'
-                     label="City Code"
-                     value={state.CityCode}
-                     length={5}
-                     onChange={(e, value) => { storeDispatch(value, "CityCode", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "CityCode",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-                <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="CityName"
-                     name="CityName"
-                     type='text'
-                     label="City Name"
-                     value={state.CityName}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "CityName", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "CityName",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-                <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
+                {/* <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'300px'}}>
                   <div>
-                    <label><b>State</b></label>
+                    <label><b>Employee</b></label>
                     <span style={{ color: "red" }}>*</span>
                     <DropDown
                       options={Data}
-                      heading={["State"]}
-                      fieldName="State"
-                      refid={'_Id'}
-                      refname={["StateName"]}
-                      Visiblefields={["StateName"]}
+                      heading={["Employee Code","Employee Name"]}
+                      fieldName="Employee Name"
+                      refid={"_id"}
+                      refname={["EmployeeCode","EmployeeName"]}
+                      Visiblefields={["EmployeeCode","EmployeeName"]}
                       height="35px"
-                      onChange={() => { getStateList() }}
-                      getKey={(e) => { storeDispatch(e, 'StateID', 'select') }}
+                      onChange={() => { getAllEmployees() }}
+                      getKey={(e) => { storeDispatch(e, 'EmployeeID', 'select') }}
                       totalCount={Data.length}
                       loading={true}
-                      value={state.StateName}
+                      disabled={!state.UnitName}
+                      value={state.EmployeeName}
                       clear={(e) => {
                         if (e) {
-                          dispatch({ type: 'text', name: 'StateID', value: "" });
-                          dispatch({ type: 'text', name: "StateName", value: "" });
+                           dispatch({ type: 'text', name: 'employeeId', value: "" });
+                          dispatch({ type: 'text', name: "EmployeeName", value: "" });
                         }
                       }}
                     />
                     </div>
-                    </GridItem>
+                    </GridItem> */}
+                <MenuListing menuData={Menu} getMenuAction={getMenuAction}/>
+                    
+                
                                                 </GridContainer>
                 </div>
               </div>
             </div>
-          </div>}
-          <div className={showentry ? 'CityTabelAndAddDivActive' : 'TabelAndAddDiv'}>
+          </div>
+            }
+          <div className={showentry ? 'TabelAndAddDivActive' : 'TabelAndAddDiv'}>
           <div className='AddbtnDivMain'>
           <div className='badgesection'>
           </div>
           <div className='leftsideContent'>
-          <div style={{display:'flex',width:'275px',justifyContent:'space-between'}}>
+          {!showentry ?  <div style={{display:'flex',width:'275px',justifyContent:'space-between'}}>
             <div className="WeeklyTaskSeacrhInput">
               <input
                 type="text"
@@ -618,42 +691,30 @@ const DeleteAlert = (row) => {
                   handleSearchChange(Event.target.value)
                 }}
               />
-              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(City)}} /> : <FaSearch className="FaSearchdiv" />}
+              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(UserRights)}} /> : <FaSearch className="FaSearchdiv" />}
             </div>
-          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'City List'} />
+          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Employee List'} />
                     <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
                                <StyledTooltip title={"Refresh Table"} placement="top">
-                              <TbRefresh onClick={()=>{if(!searchTerm){getCity()}}}/>
+                              <TbRefresh onClick={()=>{if(!searchTerm){getAllUserRights()}}}/>
                               </StyledTooltip>
                               </div>
-            </div>
+            </div> :''}
             <div className='AddbtnDiv'>
-              {(
-                // props.UserPermissions.isAdd && 
-              hideAdd) ? (
+              {/* {(props.UserPermissions.isAdd && hideAdd) ? (
                 <Button variant="contained" onClick={() => { setShowEntry(!showentry); setHideAdd(!hideAdd); clear() }} className="ButtonStyle">Add</Button>
-              ):''}
+              ):''} */}
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
-           <DataTable
-      // title="City List"
+          {!showentry ? <DataTable
       columns={columns}
       data={filteredData}
-      // data={City}
       pagination
       highlightOnHover
       responsive
       customStyles={customStyles}
-    />
+    /> :''}
         </div>
       </Loading>
     </>

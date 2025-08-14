@@ -75,8 +75,9 @@ export const sidebarMenu = [
   // },
   {title: 'Admin Panel',
     icon: <RiAdminFill />,
-    children: [{ title: 'Menu Registry' ,formId:'1001',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],},
-  { title: 'User Rights' ,formId:'1023',roles: ['admin'],UnitAccess: ['Head Office','Unit 1'],}
+    children: [{ title: 'Menu Registry' ,formId:'1001',roles: ['admin'],UnitAccess: ['Head Office','Unit 1']},
+  { title: 'User Rights' ,formId:'1011',roles: ['admin'],UnitAccess: ['Head Office','Unit 1']},
+  { title: 'Transfer' ,formId:'1010',roles: ['admin'],UnitAccess: ['Head Office','Unit 1']}
   ],
     roles: ['admin'],
    UnitAccess: ['Head Office', 'Unit 1', 'Unit 2', 'Unit 3'],

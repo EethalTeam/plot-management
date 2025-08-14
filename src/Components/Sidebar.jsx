@@ -9,6 +9,11 @@ import { MenuContext } from "../Pages/Dashboard/dashboard";
 import { FaCircle, FaCaretDown, FaCaretRight, FaCaretLeft } from "react-icons/fa";
 import { decode as base64_decode } from "base-64";
 import { config } from "../Components/CustomComponents/config";
+import { LuLandPlot } from "react-icons/lu";
+import { RiAdminFill } from "react-icons/ri";
+import { MdOutlineFormatListBulleted } from "react-icons/md";
+import { MdDashboard } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
 
 const Sidebar = () => {
   const [openMenus, setOpenMenus] = useState({});
@@ -75,8 +80,8 @@ const Sidebar = () => {
       </button>
 
       <ul className="sidebar-lists">
-        {sidebarMenu.length > 0 &&
-          sidebarMenu.map((menu) => (
+        {SideBarMenu.length > 0 &&
+          SideBarMenu.map((menu) => (
             <li key={menu.title}>
               <div
                 className="menu-title"
@@ -91,7 +96,12 @@ const Sidebar = () => {
               >
                 <div className="menu-title-icon">
                   {/* Add icon if needed */}
-                  <span className="menu-icon">{menu.icon || <FaCircle />}</span>
+                  <span className="menu-icon">{menu.title === 'Plots' ? <LuLandPlot/> : 
+                  menu.title === 'Dashboard' ? <MdDashboard/> : 
+                  menu.title === 'Visitor' ? <FaUsers/> : 
+                  menu.title === 'Master forms' ? <MdOutlineFormatListBulleted/> :
+                  menu.title === 'Admin Panel' ? <RiAdminFill/> :
+                  <FaCircle />}</span>
                   {isSidebarOpen && <span>{menu.title}</span>}
                 </div>
                 {menu.children && menu.children.length > 0 && isSidebarOpen && (

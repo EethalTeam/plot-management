@@ -55,7 +55,19 @@ const columns = [
     name: 'Employee Name',
     selector: row => row.EmployeeName,
     sortable: true,
-    width: '30%',
+    width: '20%',
+  },
+    {
+    name: 'Role',
+    selector: row => row.employeeRole,
+    sortable: true,
+    width: '15%',
+  },
+      {
+    name: 'Phone Number',
+    selector: row => row.employeePhone,
+    sortable: true,
+    width: '20%',
   },
   // {
   //   name: 'Active',

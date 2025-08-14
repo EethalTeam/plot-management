@@ -8,109 +8,89 @@ import DashboardPlotCards from '../Dashboard/DashboardCards'
 import RightPanel from '../Dashboard/RightPanel';
 import { config } from '../../Components/CustomComponents/config';
 import socket from '../../Socket';
+import Dashboard from '../Dashboard/dashboard';
 
 export default function Home(props) {
     const [ActiveTab, setActiveTab] = useState('Dashboard');
     const username= base64_decode(localStorage.getItem('username'))
-    const [ChildProduct,setChildProduct] = useState([])
-    const [ChildCount,setChildCount] = useState(0)
-    const [ParentProduct,setParentProduct] = useState([])
-    const [ParentCount,setParentCount] = useState(0)
-    const [MainParentProduct,setMainParentProduct] = useState([])
-    const [MainParentCount,setMainParentCount] = useState(0)
+    const [DashBoard,setDashBoard] = useState([])
+    const [FollowUps,setFollowUps] = useState([])
+    const [CompletedFollowUps,setCompletedFollowUps] = useState([])
     
     useEffect(()=>{
-        // getChildProduct()
-        // getParentProduct()
-        // getMainParentProduct()
-          // socket.emit("joinRoom", { unitId:localStorage.getItem('unitId') });
+        DashBoardStats()
+        getPendingFollowUps()
+        getCompletedFollowUps()
     },[])
-    useEffect(()=>{
-        if(ChildProduct.length > 0){
-           setChildCount(ChildProduct.reduce((acc,curr)=>{
-        return acc+=(curr.totalCPQuantity || 0)
-       },0))
-        }
-        if(ParentProduct.length > 0){
-       setParentCount(ParentProduct.reduce((acc,curr)=>{
-        return acc+=(curr.totalPPQuantity || 0)
-       },0))
-        }
-        if(MainParentProduct.length > 0){
-       setMainParentCount(MainParentProduct.reduce((acc,curr)=>{
-        return acc+=(curr.totalMPQuantity || 0)
-       },0))
-        }
-    },[ChildProduct,ParentProduct,MainParentProduct])
     const tabMenu = [
         { id: 1, tabMenu: "Dashboard" },
         { id: 2, tabMenu: "Getting Started" },
         { id: 3, tabMenu: "Announcements" },
         { id: 4, tabMenu: "Recent Updates" },
     ];
-      const getChildProduct = async () => {
+      const DashBoardStats = async () => {
         try {
-          let url = config.Api + "ChildProduct/getAllChildProducts";
+          let url = config.Api + "DashBoardStats";
           const response = await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({unitId: localStorage.getItem('unitId')}),
+            body: JSON.stringify({}),
           });
     
           if (!response.ok) {
-            throw new Error('Failed to get ChildProduct');
+            throw new Error('Failed to get DashBoardStats');
           }
           const result = await response.json();
-          setChildProduct(result)
+          setDashBoard(result)
         } catch (error) {
           console.error('Error:', error);
           throw error;
         }
       }
-  const getParentProduct = async () => {
+  const getPendingFollowUps = async () => {
     try {
-      let url = config.Api + "ParentProduct/getAllParentProducts";
+      let url = config.Api + "getPendingFollowUps";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({unitId: localStorage.getItem('unitId')}),
+        body: JSON.stringify({employeeId: localStorage.getItem('EmployeeID')}),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get ParentProduct');
+        throw new Error('Failed to get FollowUps');
       }
       const result = await response.json();
-      setParentProduct(result)
+      setFollowUps(result.data)
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   }
-    const getMainParentProduct = async () => {
-      try {
-        let url = config.Api + "MainParentProduct/getAllMainParentProducts";
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({unitId: localStorage.getItem('unitId')}),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to get MainParentProduct');
-        }
-        const result = await response.json();
-        setMainParentProduct(result)
-      } catch (error) {
-        console.error('Error:', error);
-        throw error;
+    const getCompletedFollowUps = async () => {
+    try {
+      let url = config.Api + "getCompletedFollowUps";
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({employeeId: localStorage.getItem('EmployeeID')}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get FollowUps');
       }
+      const result = await response.json();
+      setCompletedFollowUps(result.data)
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
     }
+  }
     const renderActiveComponent = () => {
         switch (ActiveTab) {
             case "Dashboard":
@@ -127,21 +107,22 @@ export default function Home(props) {
     };
     return (
         <div className='HomemainDiv'>
+          <div style={{width:'100%'}}>
+            <div style={{display:'flex'}}>
             <div style={{width:'75%'}}>
- <DashboardPlotCards
-  childPlot={ChildCount}
-  parentPlot={ParentCount}
-  mainParentPlot={MainParentCount}
+{Object.entries(DashBoard).length > 0 &&  <DashboardPlotCards
+ DashBoard={DashBoard}
   setSelectedMenu={props.setSelectedMenu}
   setFormID={props.setFormID}
-/>
-<div style={{marginTop:'65px'}}>
-              <PlotChart />
-              </div>
+/>}
             </div>
             <div style={{width:'25%'}}>
-<RightPanel />
+<RightPanel DashBoard={DashBoard} FollowUps={FollowUps} CompletedFollowUps={CompletedFollowUps}/>
             </div>
+            </div>
+            <div style={{marginTop:'30px',width:'100%'}}>
+              <PlotChart DashBoard={DashBoard}/>
+              </div></div>
         </div>
     )
 }

@@ -6,7 +6,6 @@ import DropDown from '../../../Components/CustomComponents/DataList'
 
 const PlotSeatView = ({ plots, handleView ,handleAddVisitor, state, dispatch, storeDispatch, getUnitList, Data}) => {
   const [selectedStatus, setSelectedStatus] = useState("All");
-console.log(plots,"plots")
   // Extract unique status names
   let statuses=[...new Set(plots.map(p => p?.statusId?.statusName))]
   const uniqueStatuses = [{filter:"All",filtercount:plots.length}, ...statuses.map((val)=>plots.filter((p)=>p.statusId.statusName === val).reduce((acc,curr)=>{return {filter:curr.statusId.statusName,filtercount:acc.filtercount+=1,colorcode:curr.statusId.colorCode}},{filter:'',filtercount:0,colorcode:''}))];

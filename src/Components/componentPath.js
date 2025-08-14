@@ -10,4 +10,6 @@ export const PathJson = {
 1007 : lazy (()=> import('../Modules/MasterForms/State/StateMain')),
 1008 : lazy (()=> import('../Modules/MasterForms/City/CityMain')),
 1009 : lazy (()=> import('../Modules/MasterForms/Employee/EmployeeMain')),
+1010 : lazy (()=> import('../Modules/MainForms/TransferFollowUp/TransferMain')),
+1011 : lazy (()=> import('../Modules/MainForms/UserRights/UserRightsMain')),
 }

@@ -1,7 +1,7 @@
 import React,{useContext, useState} from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Menu, MenuItem, Typography, Stack, Box, IconButton } from '@mui/material';
 import '../Assets/styles/Header.css';
-import Logoimg from '../Assets/Images/Plot-management-Logo.png'
+import Logoimg from '../Assets/Images/ENIS-Logo3.png'
 import profile from '../Assets/Images/profile.jpg';
 import { logout } from '../Pages/login/auth';
 import { useNavigate } from "react-router-dom";
@@ -46,10 +46,9 @@ const ProfileDialog = ({ open, onClose}) => {
         <Stack spacing={2}>
           <Typography><b>Employee Code:</b> {base64_decode(localStorage.getItem('EmployeeCode'))}</Typography>
           <Typography><b>Name:</b> {localStorage.getItem('EmployeeName')}</Typography>
-          <Typography><b>Department:</b> {localStorage.getItem('departmentName')}</Typography>
           <Typography><b>Role:</b> {base64_decode(localStorage.getItem('role'))}</Typography>
         </Stack>
-      </DialogContent>
+      </DialogContent> 
       {/* <DialogActions>
         <Button onClick={onClose} variant="contained">Close</Button>
       </DialogActions> */}

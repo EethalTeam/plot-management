@@ -355,8 +355,32 @@ input[type='number'] {
 }
 
 .plot-box {
-  width: 48%;
-  height: 200px;
+  width: 25%;
+  height: 250px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.plot-box1 {
+  width: 35%;
+  height: 250px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.plotDetails-box {
+  width: 19%;
+  height: 90px;
   background-color: white;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -417,8 +441,8 @@ input[type='number'] {
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 300px;
-  margin-top: 55px;
+  height: 250px;
+  /* margin-top: 25px; */
 }
 
 .placeholder-chart {
@@ -438,6 +462,8 @@ input[type='number'] {
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 200px;
+  overflow-y: scroll !important;
 }
 
 .sales-list {

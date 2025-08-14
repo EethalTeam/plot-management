@@ -134,7 +134,6 @@ const columns = [
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  console.log(state,"state")
   const [PlotView, setPlotView] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -514,7 +513,6 @@ const DeleteAlert = (row) => {
       // }
 
       const result = await response.json();
-       console.log(result,"response")
              if (response.status === 400) {
         props.alert({ type: 'error', message: result.message, show: true });
         return false

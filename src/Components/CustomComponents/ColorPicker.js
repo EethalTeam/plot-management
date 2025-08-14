@@ -3,7 +3,6 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 const ColorPickerCustom = (props) => {
   const [colorValue, setColorValue] = useState(props.value || '#000000');
-console.log(colorValue,"colorValue")
   const handleChange = (e) => {
     const value = e.target.value;
     setColorValue(value);

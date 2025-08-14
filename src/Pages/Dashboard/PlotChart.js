@@ -41,7 +41,7 @@ const options = {
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="line" height={350} />
+      <ReactApexChart options={options} series={series} type="line" height={350} width={'100%'}/>
     </div>
   );
 };

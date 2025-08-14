@@ -47,8 +47,11 @@ const initialState = {
    feedback:'',
    description:'',
    employeeId:'',
+   employeeName:'',
    cityId:'',
    CityName:'',
+   StateID:'',
+   StateName:'',
    unitId:'',
    UnitName:'',
    plotId:[],
@@ -289,7 +292,6 @@ const PlotColumns= [
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  console.log(state,"state")
   const [Visitor, setVisitor] = useState([])
   const [PlotDetails,setPlotDetails] = useState([])
   const [FollowUpDetails,setFollowUpDetails] = useState([])
@@ -367,6 +369,18 @@ const PlotColumns= [
        dispatch({ type: 'text', name: "description", value:'' });
        dispatch({ type: 'text', name: "cityId", value:'' });
         dispatch({ type: 'text', name: "CityName", value: '' });
+        dispatch({ type: 'text', name: "StateID", value:'' });
+        dispatch({ type: 'text', name: "StateName", value: '' });
+        dispatch({ type: 'text', name: "employeeId", value:'' });
+        dispatch({ type: 'text', name: "employeeName", value: '' });
+         dispatch({ type: 'text', name: "followUpId", value:'' });
+    dispatch({ type: 'text', name: "followUpDate", value:'' });
+    dispatch({ type: 'text', name: "followedUpById", value:'' });
+    dispatch({ type: 'text', name: "followedUpByName", value:'' });
+    dispatch({ type: 'text', name: "followUpStatus", value: "Pending" });
+    dispatch({ type: 'text', name: "followUpDescription", value:'' });
+    dispatch({ type: 'text', name: "notes", value:'' });
+    dispatch({ type: 'text', name: "remarks", value:'' });
        setPlotDetails([])
        setFollowUpDetails([])
      }
@@ -435,7 +449,7 @@ const clearPlot=()=>{
     props.alert({ type: 'error', message: 'Please enter Follow up notes', show: true });
     return;
   }
-         showAlert('Follow')
+         showAlert('Follow Up')
   }
       const ValidatePlot = () => {
      if (!state.unitId) {
@@ -578,8 +592,27 @@ cityId:state.cityId,
 visitorAddress:state.visitorAddress,
 feedback:state.feedback,
 description:state.description,
+employeeId:state.employeeId,
         //  isActive:active
     };
+    if(state.followUpDate){
+      updateData.followUpDate = state.followUpDate.split('-').reverse().join('-')
+    }
+    if(state.followedUpById){
+      updateData.followedUpById = state.followedUpById
+    }
+    if(state.followUpStatus){
+      updateData.followUpStatus = state.followUpStatus
+    }
+    if(state.followUpDescription){
+      updateData.followUpDescription = state.followUpDescription
+    }
+    if(state.notes){
+      updateData.notes = state.notes
+    }
+    if(state.remarks){
+      updateData.remarks = state.remarks
+    }
     const saveData={
 visitorName:state.visitorName,
 visitorEmail:state.visitorEmail,
@@ -590,6 +623,13 @@ cityId:state.cityId,
 visitorAddress:state.visitorAddress,
 feedback:state.feedback,
 description:state.description,
+employeeId:state.employeeId,
+followUpDate:state.followUpDate ? state.followUpDate.split('-').reverse().join('-') : '',
+followedUpById:state.followedUpById,
+followUpStatus:state.followUpStatus,
+followUpDescription:state.followUpDescription,
+notes:state.notes,
+remarks:state.remarks
           // isActive:active
     }
 
@@ -679,13 +719,14 @@ description:state.description,
   const getVisitor = async () => {
     try {
       setLoading(true);
+      const employeeId=localStorage.getItem('EmployeeID')
       let url = config.Api + "Visitor/getAllVisitor";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({employeeId:employeeId}),
       });
 
       if (!response.ok) {
@@ -764,6 +805,8 @@ description:state.description,
         throw new Error('Failed to create Visitor');
       }
       const result = await response.json();
+      setHideAdd(!hideAdd)
+      setShowEntry(!showentry)
       return result;
     } catch (error) {
       console.error('Error:', error);
@@ -913,12 +956,20 @@ if (name === 'FollowedUpStatus') {
         dispatch({ type: 'text', name: "cityId", value: e.CityIDPK });
         dispatch({ type: 'text', name: "CityName", value: e.CityName });
       }
+      if(name === "StateID"){
+        dispatch({ type: 'text', name: 'StateID', value: e.StateIDPK });
+        dispatch({ type: 'text', name: "StateName", value: e.StateName });
+      }
       if(name === 'unitId'){
         dispatch({ type: 'text', name: 'unitId', value: e._id });
         dispatch({ type: 'text', name: "UnitName", value: e.UnitName });
       }
       if(name==='plotId'){
         dispatch({ type: 'text', name: 'plotId', value: e });
+      }
+      if(name === 'employeeId'){
+        dispatch({ type: 'text', name: "employeeId", value: e._id });
+        dispatch({ type: 'text', name: "employeeName", value: e.EmployeeName });
       }
     }
   }, []);
@@ -978,6 +1029,28 @@ if (name === 'FollowedUpStatus') {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({StateID:state.StateID}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get State');
+      }
+
+      const result = await response.json();
+      SetData(result)
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  }  
+    const getStateList = async () => {
+    try {
+      let url = config.Api + "State/getAllStates";
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({}),
       });
 
@@ -1024,7 +1097,7 @@ if (name === 'FollowedUpStatus') {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({unitId: state.unitId}),
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) {
@@ -1056,7 +1129,11 @@ if (name === 'FollowedUpStatus') {
        dispatch({ type: 'text', name: "feedback", value: data.feedback ? data.feedback : '' });
        dispatch({ type: 'text', name: "description", value: data.description ? data.description : '' });
        dispatch({ type: 'text', name: "cityId", value: data.cityId._id });
-        dispatch({ type: 'text', name: "CityName", value: data.cityId.CityName });
+        dispatch({ type: 'text', name: "CityName", value: data.cityId.CityName });;
+        dispatch({ type: 'text', name: "StateID", value: data.cityId.StateID._id });
+        dispatch({ type: 'text', name: "StateName", value: data.cityId.StateID.StateName });
+        dispatch({ type: 'text', name: "employeeId", value: data.employeeId._id });
+        dispatch({ type: 'text', name: "employeeName", value: data.employeeId.EmployeeName });
        setPlotDetails(data.plots)
        setFollowUpDetails(data.followUps)
      }
@@ -1159,6 +1236,7 @@ if (name === 'FollowedUpStatus') {
                       setHideAdd(!hideAdd)
                       setShowEntry(!showentry)
                       setIsEdit(false)
+                      setAddFollow(false)
                     }}
                     className='ButtonStyle'
                   >
@@ -1270,6 +1348,32 @@ if (name === 'FollowedUpStatus') {
                     }
                    /> 
                </GridItem>
+                         <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
+                  <div>
+                    <label><b>State</b></label>
+                    <span style={{ color: "red" }}>*</span>
+                    <DropDown
+                      options={Data}
+                      heading={["State"]}
+                      fieldName="State"
+                      refid={'StateIDPK'}
+                      refname={["StateName"]}
+                      Visiblefields={["StateName"]}
+                      height="35px"
+                      onChange={() => { getStateList() }}
+                      getKey={(e) => { storeDispatch(e, 'StateID', 'select') }}
+                      totalCount={Data.length}
+                      loading={true}
+                      value={state.StateName}
+                      clear={(e) => {
+                        if (e) {
+                          dispatch({ type: 'text', name: 'StateID', value: "" });
+                          dispatch({ type: 'text', name: "StateName", value: "" });
+                        }
+                      }}
+                    />
+                    </div>
+                    </GridItem>
              <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
                   <div>
                     <label><b>City</b></label>
@@ -1280,6 +1384,7 @@ if (name === 'FollowedUpStatus') {
                       fieldName="City"
                       refid={'CityIDPK'}
                       refname={["CityName"]}
+                      disabled={state.StateID ? false : true}
                       Visiblefields={["CityName"]}
                       height="35px"
                       onChange={() => { getCityList() }}
@@ -1341,6 +1446,32 @@ if (name === 'FollowedUpStatus') {
                     }
                    /> 
                </GridItem>
+                               <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
+                  <div>
+                    <label><b>Reference</b></label>
+                    <span style={{ color: "red" }}>*</span>
+                    <DropDown
+                      options={Data}
+                      heading={["Employee Name"]}
+                      fieldName="Referred By"
+                      refid={'_Id'}
+                      refname={["EmployeeName"]}
+                      Visiblefields={["EmployeeName"]}
+                      height="35px"
+                      onChange={() => { getEmployeeList() }}
+                      getKey={(e) => { storeDispatch(e, 'employeeId', 'select') }}
+                      totalCount={Data.length}
+                      loading={true}
+                      value={state.employeeName}
+                      clear={(e) => {
+                        if (e) {
+                          dispatch({ type: 'text', name: "employeeId", value: "" });
+                          dispatch({ type: 'text', name: "employeeName", value: "" });
+                        }
+                      }}
+                    />
+                    </div>
+                    </GridItem>
                     </GridContainer>
                                  {isEdit ? <div>
                                              <Box sx={{ width: '100%', bgcolor: 'background.paper',height:'35px' }}>
@@ -1368,13 +1499,13 @@ if (name === 'FollowedUpStatus') {
   marginTop:'10px'
 }}><b>{OrderTab === 'Follow Up' ? 'Follow Up Details' : 'Plot Details'}</b></p>
            <div className='AddbtnDiv' style={{width:'100%',display:'flex',justifyContent:'flex-end'}}>
-              {!AddFollow ? (
+              {(isEdit && !AddFollow) ? (
                 <Button variant="contained" onClick={() => {setAddFollow(true);
                   cleaerFollowUp()
                   clearPlot()
                  }} className="ButtonStyle">{OrderTab === 'Follow Up' ? 'Add Follow up' : 'Add Plot'}</Button>
                ):''} 
-                 {AddFollow && 
+                 {(AddFollow && isEdit) && 
                  <div style={{width:'14%',display:'flex',justifyContent:'space-between'}}>
        <Button
                     type="submit"
@@ -1399,7 +1530,7 @@ if (name === 'FollowedUpStatus') {
                   </div>}
                   </div>
                 
-   {(AddFollow && OrderTab === 'Follow Up') && <GridContainer spacing={2}>
+   {(!state._id || (AddFollow && OrderTab === 'Follow Up')) && <GridContainer spacing={2}>
   <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
                        <div>
                     <label><b>Follow Up Date</b></label>
@@ -1557,6 +1688,7 @@ if (name === 'FollowedUpStatus') {
                       getKey={(e) => { storeDispatch(e, 'plotId', 'select') }}
                       totalCount={Data.length}
                       loading={true}
+                      NoToolTip={true}
                       value={state.plotNumber}
                       clear={(e) => {
                         if (e) {
@@ -1622,7 +1754,7 @@ if (name === 'FollowedUpStatus') {
                     </div>
                     </GridItem>
       </GridContainer>}
-        {(!AddFollow) ? <DataTable
+        {(state._id && !AddFollow) ? <DataTable
       // title="Follow up List"
       columns={OrderTab === 'Follow Up' ? FollowUpColumns : PlotColumns}
       data={OrderTab === 'Follow Up' ? FollowUpDetails : PlotDetails}
