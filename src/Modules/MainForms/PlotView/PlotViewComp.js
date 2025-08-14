@@ -81,7 +81,7 @@ const handleClick = (row) => {
           flexWrap: "wrap",
           gap: "10px",
           padding: "3px",
-          height:'75vh',
+          height:'auto',
           overflow:'auto'
         }}
       >
