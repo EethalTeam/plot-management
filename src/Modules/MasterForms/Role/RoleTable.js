@@ -1,88 +1,46 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import { useState, useReducer, useCallback, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import MuiTableCustom from '../../../Components/CustomComponents/MuiTableCustom';
 import Loading from '../../../Components/CustomComponents/Loading';
 import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
-import TextAreaCustom from '../../../Components/CustomComponents/TextArea';
 import { FaSearch } from "react-icons/fa";
 // import ClearIcon from '@material-ui/icons/Clear';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { config } from '../../../Components/CustomComponents/config';
-import Switch from '@mui/material/Switch';
-import FormGroup from '@mui/material/FormGroup';
-import ToggleSwitch from '../../../Components/CustomComponents/toggleSwitch';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import ExportTableToExcel from "../../../Components/CustomComponents/ExportTableToExcel";
 import GridContainer from '../../../Components/CustomComponents/GridContainer';
 import GridItem from '../../../Components/CustomComponents/GridItem';
 import DataTable from 'react-data-table-component';
-import { FaEye, FaEdit, FaTrash, FaCircle } from 'react-icons/fa';
-import DropDown from '../../../Components/CustomComponents/DataList'
-import '../../../Assets/app.css'
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import { TbRefresh } from "react-icons/tb";
 import StyledTooltip from '../../../Components/CustomComponents/Tooltip'
 import ViewDataModal from '../../../Components/CustomComponents/ViewData';
 
 const initialState = {
   _id: '',
-    EmployeeCode:'',
-   EmployeeName:'',
-   employeeEmail:'',
-   employeePhone:'',
-   employeeAddress:'',
-   password:'',
-   employeeRole:'',
-   roleId:''
+    RoleName:'',
+   RoleCode:'',
  }
-export default function DepartmentTable(props) {
-  const headers = ["Employee Code","Employee Name",'Active']
-  const TableVisibleItem = ["EmployeeCode","EmployeeName",'isActive']
-  const [open, setOpen] = useState(false);
+export default function RoleTable(props) {
+    const [open, setOpen] = useState(false);
     const [Viewdata,setViewData] = useState({})
 const columns = [
   {
-    name: 'Employee Code',
-    selector: row => row.EmployeeCode,
+    name: 'Role Name',
+    selector: row => row.RoleName,
     sortable: true,
-    width: '20%',
+    width: '40%',
   },
-  {
-    name: 'Employee Name',
-    selector: row => row.EmployeeName,
-    sortable: true,
-    width: '20%',
+  {name:"Role Code",
+   selector: row => row.RoleCode,
+   sortable: true,
+   width: '40%',
   },
-    {
-    name: 'Role',
-    selector: row => row.employeeRole,
-    sortable: true,
-    width: '15%',
-  },
-      {
-    name: 'Phone Number',
-    selector: row => row.employeePhone,
-    sortable: true,
-    width: '20%',
-  },
-  // {
-  //   name: 'Active',
-  //   selector: row => row.isActive,
-  //   sortable: true,
-  //   cell: row => (
-  //     <FaCircle
-  //       color={row.isActive ? 'green' : 'red'}
-  //       title={row.isActive ? 'Active' : 'Inactive'}
-  //       size={12}
-  //     />
-  //   ),
-  //   center: true,
-  // },
   {
     name: 'Actions',
     cell: row => (
@@ -118,18 +76,14 @@ const columns = [
   const [loading, setLoading] = useState(false);
   const [hideAdd, setHideAdd] = useState(true);
   const [state, dispatch] = useReducer(Reducer, initialState);
-  const [Employee, setEmployee] = useState([])
+  const [Role, setRole] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-  const [Data, SetData] = useState([])
-  const [Role,setRole] = useState([{RoleIDPK:1,RoleName:"admin"},
-    {RoleIDPK:2,RoleName:"agent"}
-  ])
   const [active, setActive] = useState(true);
-
+console.log(active)
   useEffect(() => {
-    getEmployee()
+    getRole()
   }, [])
 
   const debounce = (func, delay) => {
@@ -145,18 +99,18 @@ const columns = [
   const handleSearchChange = (
     debounce((value) => {
       setSearchTerm(value);
-      if (Employee.length > 0) {
+      if (Role.length > 0) {
         applySearchFilter(value);
       }
     }, 300)
   );
 
   const applySearchFilter = (search) => {
-    if (Employee.length === 0) {
+    if (Role.length === 0) {
       return;
     }
 
-    let data = [...Employee];
+    let data = [...Role];
     const filtered = data.filter((row) =>
       Object.values(row).some((value) =>
         value?.toString().toLowerCase().includes(search.toLowerCase())
@@ -177,46 +131,23 @@ const columns = [
     setIsEdit(false);
     setActive(true);
     dispatch({ type: 'text', name: '_id', value: "" });
-    dispatch({ type: 'text', name: "employeeEmail", value: "" });
-    dispatch({ type: 'text', name: "employeePhone", value: "" });
-        dispatch({ type: 'text', name: "EmployeeCode", value: "" });
-       dispatch({ type: 'text', name: "EmployeeName", value: "" });
-       dispatch({ type: 'text', name: "password", value: "" });
-       dispatch({ type: 'text', name: "employeeRole", value: "" });
-       dispatch({ type: 'text', name: "roleId", value: "" });
-       dispatch({ type: 'text', name: "employeeAddress", value: '' });
+        dispatch({ type: 'text', name: "RoleName", value: "" });
+       dispatch({ type: 'text', name: "RoleCode", value: "" });
      }
 
   const columnsConfig = [
-     {label:"Employee Code", value: "EmployeeCode" },
-      {label:"Employee Name", value: "EmployeeName" }
-   ,
+     {label:"Role Name", value: "RoleName" },
+      {label:"Role Code", value: "RoleCode" },
   //  { label: 'Active', value: 'isActive' }    
   ];
 
   const Validate = () => {
-      if (!state.EmployeeCode) {
-    props.alert({ type: 'error', message: 'Please enter Employee Code', show: true });
+      if (!state.RoleName) {
+    props.alert({ type: 'error', message: 'Please enter Role Name', show: true });
     return;
   }
-     if (!state.EmployeeName) {
-    props.alert({ type: 'error', message: 'Please enter Employee Name', show: true });
-    return;
-  }
-  if (!state.employeeEmail) {
-    props.alert({ type: 'error', message: 'Please enter Email', show: true });
-    return;
-  }
-    if (!state.employeePhone) {
-    props.alert({ type: 'error', message: 'Please enter phone number', show: true });
-    return;
-  }
-    if (!state.password) {
-    props.alert({ type: 'error', message: 'Please enter password', show: true });
-    return;
-  }
-    if (!state.employeeRole) {
-    props.alert({ type: 'error', message: 'Please select Role', show: true });
+  if (!state.RoleCode) {
+    props.alert({ type: 'error', message: 'Please enter Role Code', show: true });
     return;
   }
          showAlert()
@@ -341,47 +272,36 @@ const DeleteAlert = (row) => {
     props.alert({ type: '', message: '', show: false });
 
     const updateData = {
-          _id: state._id, 
-          EmployeeCode : state.EmployeeCode,
-          EmployeeName : state.EmployeeName,
-          password :  state.password,
-          employeeRole : state.employeeRole,
-          employeeEmail : state.employeeEmail,
-          employeePhone : state.employeePhone,
-          employeeAddress : state.employeeAddress
+      _id: state._id, 
+            RoleName : state.RoleName,
+          RoleCode : state.RoleCode,
         //  isActive:active
     };
     const saveData={
-          EmployeeCode : state.EmployeeCode,
-          EmployeeName : state.EmployeeName,
-          password :  state.password,
-          employeeRole : state.employeeRole,
-          roleId : state.roleId,
-          employeeEmail : state.employeeEmail,
-          employeePhone : state.employeePhone,
-          employeeAddress : state.employeeAddress
+            RoleName : state.RoleName,
+          RoleCode : state.RoleCode,
           // isActive:active
     }
 
     try {
       if (isEdit) {
-        await updateEmployee(updateData);
-        props.alert({ type: 'success', message: 'Employee Updated successfully!', show: true });
+        await updateRole(updateData);
+        props.alert({ type: 'success', message: 'Role Updated successfully!', show: true });
       } else {
-        await createEmployee(saveData);
-        props.alert({ type: 'success', message: 'Employee created successfully!', show: true });
+        await createRole(saveData);
+        props.alert({ type: 'success', message: 'Role created successfully!', show: true });
       }
       clear();
-      getEmployee();
+      getRole();
     } catch (error) {
-      throw new Error(isEdit ? 'Failed to update Employee.' : 'Failed to create Employee.');
+      throw new Error(isEdit ? 'Failed to update Role.' : 'Failed to create Role.');
     }
   };
 
-  const getEmployee = async () => {
+  const getRole = async () => {
     try {
       setLoading(true);
-      let url = config.Api + "Employee/getAllEmployees";
+      let url = config.Api + "Role/getAllRoles";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -391,47 +311,22 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Employee');
+        throw new Error('Failed to get Role');
       }
       setLoading(false);
       const result = await response.json();
-      setEmployee(result.data)
-      setFilteredData(result.data);
+      setRole(result)
+      setFilteredData(result);
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   }
 
- const getRoleList = async () => {
-      try {
-        let url = config.Api + "RoleBased/getAllRoles/";
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({}),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to get State');
-        }
-  
-        const result = await response.json();
-        SetData(result.data)
-        // setState(result)
-        // setFilteredData(result)
-      } catch (error) {
-        console.error('Error:', error);
-        throw error;
-      }
-    }
-
-  const createEmployee = async (data) => {
+  const createRole = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Employee/createEmployee";
+      let url = config.Api + "Role/createRole";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -441,7 +336,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to create Employee');
+        throw new Error('Failed to create Role');
       }
       const result = await response.json();
       return result;
@@ -451,10 +346,10 @@ const DeleteAlert = (row) => {
     }
   };
   
-  const updateEmployee = async (data) => {
+  const updateRole = async (data) => {
     try {
       setLoading(true);
-      let url = config.Api + "Employee/updateEmployee";
+      let url = config.Api + "Role/updateRole";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -464,7 +359,7 @@ const DeleteAlert = (row) => {
       });
       setLoading(false);
       if (!response.ok) {
-        throw new Error('Failed to update Employee');
+        throw new Error('Failed to update Role');
       }
 
       const result = await response.json();
@@ -485,13 +380,7 @@ const DeleteAlert = (row) => {
     } else if (fieldType === "date") {
       dispatch({ type: 'text', name: name, value: e });
     } else if (fieldType === "select") {
-  if (name === 'DepartmentID') {
-        dispatch({ type: 'text', name: 'employeeEmail', value: e.DepartmentIDPK });
-        dispatch({ type: 'text', name: "employeePhone", value: e.employeePhone });
-      }else if (name === 'employeeRole') {
-        dispatch({ type: 'text', name: "roleId", value: e._id });
-        dispatch({ type: 'text', name: "employeeRole", value: e.RoleName });
-      }
+
     }
   }, []);
 
@@ -501,17 +390,12 @@ const DeleteAlert = (row) => {
     setIsEdit(true);
     // setActive(data.isActive);
     dispatch({ type: 'text', name: '_id', value: data._id ? data._id : '' });
-    dispatch({ type: 'text', name: "employeeEmail", value: data.employeeEmail ? data.employeeEmail : '' });
-    dispatch({ type: 'text', name: "employeePhone", value: data.employeePhone ? data.employeePhone : '' });
-    dispatch({ type: 'text', name: "password", value: data.password ? data.password : '' });
-    dispatch({ type: 'text', name: "employeeRole", value: data.employeeRole ? data.employeeRole : '' });
-        dispatch({ type: 'text', name: "EmployeeCode", value: data.EmployeeCode ? data.EmployeeCode : '' });
-       dispatch({ type: 'text', name: "EmployeeName", value: data.EmployeeName ? data.EmployeeName : '' });
-       dispatch({ type: 'text', name: "employeeAddress", value: data.employeeAddress ? data.employeeAddress : '' });
+        dispatch({ type: 'text', name: "RoleName", value: data.RoleName ? data.RoleName : '' });
+       dispatch({ type: 'text', name: "RoleCode", value: data.RoleCode ? data.RoleCode : '' });
      }
   const deleteRow = async (data) => {
     try {
-      let url = config.Api + "Employee/deleteEmployee";
+      let url = config.Api + "Role/deleteRole";
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -521,11 +405,11 @@ const DeleteAlert = (row) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete Employee');
+        throw new Error('Failed to delete Role');
       }
 
       const result = await response.json();
-      getEmployee();
+      getRole();
       return result;
     } catch (error) {
       console.error('Error:', error);
@@ -533,10 +417,8 @@ const DeleteAlert = (row) => {
     }
   }
   const handleView = (row) => {
-    setViewData({"Employee Code":row.EmployeeCode,
-                 "Employee Name":row.EmployeeName,
-                 "Department":row.employeePhone,
-                 "Role":row.employeeRole,
+    setViewData({"Role Name":row.RoleName,
+                 "Role Code":row.RoleCode
                 })
   setOpen(true)
 };
@@ -544,7 +426,7 @@ const DeleteAlert = (row) => {
     <>
     <ViewDataModal open={open} onClose={() => setOpen(false)} data={Viewdata} />
       <Loading loading={loading}>
-        {showentry && 
+        {showentry && (
           <div className='entryParentDiv'>
             {props.alert?.show && (
               <Stack className='Stackstyle' spacing={2}>
@@ -599,133 +481,42 @@ const DeleteAlert = (row) => {
               <div className="entryfirstcolmn">
                 <div >
                   <GridContainer spacing={2}>
-           <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
+                     <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'400px'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="EmployeeCode"
-                     name="EmployeeCode"
+                     id="RoleCode"
+                     name="RoleCode"
                      type='text'
-                     label="Employee Code"
-                     value={state.EmployeeCode}
-                     length={10}
-                     onChange={(e, value) => { storeDispatch(value, "EmployeeCode", "text") }}
+                     label="Role Code"
+                     value={state.RoleCode}
+                     length={200}
+                     onChange={(e, value) => { storeDispatch(value, "RoleCode", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "employeeRole",value:""});
-                        dispatch({type:'text',name: "roleId",value:""});
-                    }}
+                      dispatch({type:'text',name: "RoleCode",value:""});}}
                     }
                    /> 
                </GridItem>
-                <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
+                  <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'400px'}}>
                        <TextFieldCustom                    
                        mandatory={true}
-                     id="EmployeeName"
-                     name="EmployeeName"
+                     id="RoleName"
+                     name="RoleName"
                      type='text'
-                     label="Employee Name"
-                     value={state.EmployeeName}
+                     label="Role Name"
+                     value={state.RoleName}
                      length={50}
-                     onChange={(e, value) => { storeDispatch(value, "EmployeeName", "text") }}
+                     onChange={(e, value) => { storeDispatch(value, "RoleName", "text") }}
                      clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "EmployeeName",value:""});}}
+                      dispatch({type:'text',name: "RoleName",value:""});}}
                     }
                    /> 
                </GridItem>
-
-                 <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="employeeEmail"
-                     name="employeeEmail"
-                     type='email'
-                     label="Employee Email"
-                     value={state.employeeEmail}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "employeeEmail", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "employeeEmail",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-                 <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="employeePhone"
-                     name="employeePhone"
-                     type='number'
-                     Phone={true}
-                     label="Phone Number"
-                     value={state.employeePhone}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "employeePhone", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "employeePhone",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-                 <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'30%'}}>
-                       <TextAreaCustom                    
-                       mandatory={true}
-                     id="employeeAddress"
-                     name="employeeAddress"
-                     type='text'
-                     Phone={true}
-                     label="Address"
-                     value={state.employeeAddress}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "employeeAddress", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "employeeAddress",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-
-<GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="password"
-                     name="password"
-                     type='text'
-                     label="Password"
-                     value={state.password}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "password", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "password",value:""});}}
-                    }
-                   /> 
-               </GridItem>
-                 <GridItem xs={6} md={6} lg={6} sm={6}  style={{width:'30%'}}>
-                  <div>
-                    <label><b>Role</b></label>
-                    <span style={{ color: "red" }}>*</span>
-                    <DropDown
-                      options={Data}
-                      heading={["Employee Role"]}
-                      fieldName="Employee Role"
-                      refid={'RoleIDPK'}
-                      refname={["RoleName"]}
-                      Visiblefields={["RoleName"]}
-                      height="35px"
-                      onChange={() => {getRoleList()  }}
-                      getKey={(e) => { storeDispatch(e, 'employeeRole', 'select') }}
-                      totalCount={Data.length}
-                      loading={true}
-                      value={state.employeeRole}
-                      clear={(e) => {
-                        if (e) {
-                          dispatch({ type: 'text', name: "employeeRole", value: "" });
-                        }
-                      }}
-                    />
-                    </div>
-                    </GridItem>
-                                                </GridContainer>
+                    </GridContainer>
                 </div>
               </div>
             </div>
-          </div>}
-          <div className={showentry ? 'EmployeeTabelAndAddDivActive' : 'TabelAndAddDiv'}>
+          </div>)}
+          <div className={showentry ? 'TabelAndAddDivActive' : 'TabelAndAddDiv'}>
           <div className='AddbtnDivMain'>
           <div className='badgesection'>
           </div>
@@ -743,19 +534,19 @@ const DeleteAlert = (row) => {
                   handleSearchChange(Event.target.value)
                 }}
               />
-              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(Employee)}} /> : <FaSearch className="FaSearchdiv" />}
+              {searchTerm ? <ClearIcon title="clear" className="FilterClearIcon" onClick={() => {setSearchTerm('');setFilteredData(Role)}} /> : <FaSearch className="FaSearchdiv" />}
             </div>
-          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Employee List'} />
-                    <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
-                               <StyledTooltip title={"Refresh Table"} placement="top">
-                              <TbRefresh onClick={()=>{if(!searchTerm){getEmployee()}}}/>
-                              </StyledTooltip>
-                              </div>
+          <ExportTableToExcel tableData={filteredData} columnConfig={columnsConfig} fileName={'Role List'} />
+          <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'30px'}}>
+                     <StyledTooltip title={"Refresh Table"} placement="top">
+                    <TbRefresh onClick={()=>{if(!searchTerm){getRole()}}}/>
+                    </StyledTooltip>
+                    </div>
             </div>
             <div className='AddbtnDiv'>
               {(
-                // props.UserPermissions.isAdd &&
-               hideAdd) ? (
+                // props.UserPermissions.isAdd && 
+                hideAdd) ? (
                 <Button variant="contained" onClick={() => { setShowEntry(!showentry); setHideAdd(!hideAdd); clear() }} className="ButtonStyle">Add</Button>
               ):''}
             </div>
@@ -770,10 +561,10 @@ const DeleteAlert = (row) => {
             Deletedisabled
           /> */}
            <DataTable
-      // title="Employee List"
+      // title="Role List"
       columns={columns}
       data={filteredData}
-      // data={Employee}
+      // data={Role}
       pagination
       highlightOnHover
       responsive
