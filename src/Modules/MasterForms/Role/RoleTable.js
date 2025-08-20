@@ -81,7 +81,6 @@ const columns = [
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [active, setActive] = useState(true);
-console.log(active)
   useEffect(() => {
     getRole()
   }, [])

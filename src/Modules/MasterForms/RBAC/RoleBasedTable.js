@@ -42,7 +42,6 @@ export default function RoleBasedTable(props) {
     const [MenuAccess, setMenuAccess] = useState([
       { menuId: '',MenuName:'',isAdd:false ,isEdit:false ,isView:false ,isDelete:false },
     ]);
-    console.log(MenuAccess,"MenuAccess")
 const [open, setOpen] = useState(false);
 const [Viewdata,setViewData] = useState({})
 const columns = [
