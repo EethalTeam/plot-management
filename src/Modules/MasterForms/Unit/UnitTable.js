@@ -1,14 +1,12 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import { useState, useReducer, useCallback, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import MuiTableCustom from '../../../Components/CustomComponents/MuiTableCustom';
 import Loading from '../../../Components/CustomComponents/Loading';
 import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
 import { FaSearch } from "react-icons/fa";
-// import ClearIcon from '@material-ui/icons/Clear';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -541,37 +539,6 @@ const DeleteAlert = (row) => {
                     }
                    /> 
                </GridItem>
-                                                     {/* <GridItem xs={6} md={6} lg={6} sm={6} style={{width:'390px'}}> 
-                       <TextFieldCustom                    
-                       mandatory={true}
-                     id="UnitLocation"
-                     name="UnitLocation"
-                     type='text'
-                     label="Unit Location"
-                     value={state.UnitLocation}
-                     length={50}
-                     onChange={(e, value) => { storeDispatch(value, "UnitLocation", "text") }}
-                     clear={(e) => { if(e){ 
-                      dispatch({type:'text',name: "UnitLocation",value:""});}}
-                    }
-                   /> 
-               </GridItem> */}
-               {/* <GridItem xs={6} md={6} lg={6} sm={6} style={{display:'flex',justifyContent:'flex-start',alignItems:'center',width:'390px'}}>
-                <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={state.isDispatchEnabled}  
-                          onChange={(event) => {
-                            storeDispatch(event.target.checked, "isDispatchEnabled", "boolean")
-                          }}
-                          color="secondary"
-                        />
-                      }
-                      label={state.isDispatchEnabled ? "Dispatch Enabled" : "Dispatch Disabled"}  
-                    />
-                  </FormGroup>
-                  </GridItem> */}
                     </GridContainer>
                 </div>
               </div>
@@ -613,14 +580,6 @@ const DeleteAlert = (row) => {
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
            <DataTable
       // title="Unit List"
       columns={columns}

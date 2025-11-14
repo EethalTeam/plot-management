@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import ClickAwayListener from "@mui/material/ClickAwayListener";

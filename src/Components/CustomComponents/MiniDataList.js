@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import ClearIcon from '@mui/icons-material/Clear';
+import { useState, useRef, useEffect } from "react";
 import { BiSolidDownArrow ,BiSolidUpArrow } from "react-icons/bi";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import LinearProgress from '@mui/material/LinearProgress';
@@ -13,7 +12,6 @@ const ProjectDataList = (props) => {
   const [justSelected, setJustSelected] = useState(false);
   const inputRef = useRef(null);
   const datalistRef = useRef(null);
-  const divRef = useRef(null);
 
   useEffect(() => {
     if (props.inputSelected) {

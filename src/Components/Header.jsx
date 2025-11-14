@@ -1,5 +1,5 @@
-import React,{useContext, useState} from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Menu, MenuItem, Typography, Stack, Box, IconButton } from '@mui/material';
+import {useContext, useState} from 'react';
+import { Dialog, DialogContent, DialogActions, Button, Menu, MenuItem, Typography, Stack, Box, IconButton } from '@mui/material';
 import '../Assets/styles/Header.css';
 import Logoimg from '../Assets/Images/ENIS-Logo3.png'
 import profile from '../Assets/Images/profile.jpg';
@@ -7,7 +7,6 @@ import { logout } from '../Pages/login/auth';
 import { useNavigate } from "react-router-dom";
 import { MenuContext } from '../Pages/Dashboard/dashboard'
 import NotificationIcon from '../Notification';
-import { IoMdNotificationsOutline } from "react-icons/io";
 import { decode as base64_decode, encode as base64_encode} from "base-64"
 import CloseIcon from '@mui/icons-material/Close';
 import { TbReload } from "react-icons/tb";
@@ -69,14 +68,10 @@ const ProfileDialog = ({ open, onClose}) => {
       />
       <div className="logo-container">
         <img src={Logoimg} alt="Logo" className="logo-image" />
-        {/* <span className='logotxt'>Inventory</span> */}
          {/* <div className='locationDiv'> */}
         <span style={{paddingTop:'20px',color:'black'}}><b>{selectedMenu}</b></span>
       {/* </div> */}
       </div>
-      {/* <div style={{color:'black'}}>
-        <b>{localStorage.getItem('unitName')}</b>
-      </div> */}
       <div style={{display:'flex'}}>
         <div style={{color:'black',display:'flex',alignItems:'center'}}>
           <TbReload style={{width:'50px',height:'20px',color:'blue'}} onClick={()=>{

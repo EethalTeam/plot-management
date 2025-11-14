@@ -13,4 +13,5 @@ export const PathJson = {
 1010 : lazy (()=> import('../Modules/MainForms/TransferFollowUp/TransferMain')),
 1011 : lazy (()=> import('../Modules/MainForms/UserRights/UserRightsMain')),
 1012 : lazy (()=> import('../Modules/MasterForms/RBAC/RoleBasedMain')),
+1013 : lazy (()=> import('../Modules/MainForms/AllCalls/AllCallsMain')),
 }

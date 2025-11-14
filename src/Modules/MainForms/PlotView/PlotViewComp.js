@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Tooltip, Button, Stack } from "@mui/material";
 import { FcLikePlaceholder } from "react-icons/fc";
 import { FaEye } from "react-icons/fa";
@@ -48,8 +48,6 @@ const handleClick = (row) => {
         ))}
         </div>
            <div>
-                    {/* <label><b>Status</b></label>
-                    <span style={{ color: "red" }}>*</span> */}
                     <DropDown
                       options={Data}
                       heading={["Unit"]}

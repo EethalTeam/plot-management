@@ -1,15 +1,12 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import { useState, useReducer, useCallback, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import MuiTableCustom from '../../../Components/CustomComponents/MuiTableCustom';
 import Loading from '../../../Components/CustomComponents/Loading';
 import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
 import { FaSearch } from "react-icons/fa";
-// import ClearIcon from '@material-ui/icons/Clear';
-import CustomDatePicker from '../../../Components/CustomComponents/DatePicker';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -53,8 +50,6 @@ const initialState = {
    UnitName:''
  }
 export default function PlotTable(props) {
-  const headers = ["Plot Code","Unit",'Active']
-  const TableVisibleItem = ["plotCode","UnitName",'isActive']
   const [open, setOpen] = useState(false);
     const [Viewdata,setViewData] = useState({})
     
@@ -1246,14 +1241,6 @@ const handleAddVisitor = (row)=>{
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
            <DataTable
       // title="Employee List"
       columns={columns}

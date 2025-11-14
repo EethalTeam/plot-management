@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import MuiTableCustom from '../../../Components/CustomComponents/MuiTableCustom';
 import Loading from '../../../Components/CustomComponents/Loading';
 import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
@@ -636,14 +635,6 @@ const DeleteAlert = (row) => {
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
            <DataTable
       // title="City List"
       columns={columns}

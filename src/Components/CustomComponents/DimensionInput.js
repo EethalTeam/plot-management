@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField, Box, Typography } from "@mui/material";
 
 const DimensionInput = (props) => {

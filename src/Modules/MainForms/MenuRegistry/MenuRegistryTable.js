@@ -1,14 +1,12 @@
-import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import { useState, useReducer, useCallback, useEffect } from 'react'
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
-import MuiTableCustom from '../../../Components/CustomComponents/MuiTableCustom';
 import Loading from '../../../Components/CustomComponents/Loading';
 import Reducer from '../../../Components/Reducer/commonReducer';
 import TextFieldCustom from '../../../Components/CustomComponents/textField';
 import { FaSearch } from "react-icons/fa";
-// import ClearIcon from '@material-ui/icons/Clear';
 import ClearIcon from '@mui/icons-material/Clear';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -53,12 +51,6 @@ const columns = [
     sortable: true,
     width: '30%',
   },
-//   {
-//     name: 'Parent Name',
-//     selector: row => row.ParentName,
-//     sortable: false,
-//     width: '30%',
-//   },
   // {
   //   name: 'Active',
   //   selector: row => row.isActive,
@@ -86,11 +78,11 @@ const columns = [
           style={{ cursor: 'pointer', color: '#ffc107' }}
           title="Edit"
         />}
-        {props.UserPermissions.isDelete &&<FaTrash
+        {/* {props.UserPermissions.isDelete &&<FaTrash
           onClick={() => DeleteAlert(row)}
           style={{ cursor: 'pointer', color: '#dc3545' }}
           title="Delete"
-        />}
+        />} */}
         {(!props.UserPermissions.isView && !props.UserPermissions.isEdit && !props.UserPermissions.isDelete) && 
         <p>-</p>
         }
@@ -443,7 +435,6 @@ const DeleteAlert = (row) => {
 
       const result = await response.json();
       SetData(result.data)
-      // setState(result)
       // setFilteredData(result)
     } catch (error) {
       console.error('Error:', error);
@@ -664,14 +655,6 @@ const DeleteAlert = (row) => {
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
            <DataTable
       // title="Menu List"
       columns={columns}

@@ -551,14 +551,6 @@ const DeleteAlert = (row) => {
             </div>
             </div>
           </div>
-          {/* <MuiTableCustom
-            headers={headers}
-            data={filteredData}
-            delete={(val) => deleteRow(val)}
-            edit={(data) => { editTable(data) }}
-            TableVisibleItem={TableVisibleItem}
-            Deletedisabled
-          /> */}
            <DataTable
       // title="Role List"
       columns={columns}

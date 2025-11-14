@@ -1,4 +1,3 @@
-import React from "react";
 import LoadingGif from '../../Assets/gif/loading_bar1.gif'
 
 const Loading = ({ loading, children }) => {

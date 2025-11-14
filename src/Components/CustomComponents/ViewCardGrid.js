@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Tabs, Tab, Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import AdjustIcon from "@mui/icons-material/Tune";
 

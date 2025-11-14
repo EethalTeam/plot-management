@@ -18,7 +18,6 @@ import { FaUsers } from "react-icons/fa";
 const Sidebar = () => {
   const [openMenus, setOpenMenus] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const UserRole = base64_decode(localStorage.getItem("role"));
   const [SideBarMenu, setSideBarMenu] = useState([]);
   const { selectedMenu, setSelectedMenu, setFormID, setUserPermissions } =
     useContext(MenuContext);
