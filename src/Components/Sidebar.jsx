@@ -3,12 +3,12 @@ import {
   sidebarMenu,
   updatedMenu,
   filterMenuByRoleAndUnit,
-} from "./data/sidebarMenu";
+} from "./data/sidebarMenu.jsx";
 import "../Assets/styles/Sidebar.css";
 import { MenuContext } from "../Pages/Dashboard/dashboard";
 import { FaCircle, FaCaretDown, FaCaretRight, FaCaretLeft } from "react-icons/fa";
 import { decode as base64_decode } from "base-64";
-import { config } from "../Components/CustomComponents/config";
+import { config } from "./CustomComponents/config";
 import { LuLandPlot } from "react-icons/lu";
 import { RiAdminFill } from "react-icons/ri";
 import { MdOutlineFormatListBulleted } from "react-icons/md";

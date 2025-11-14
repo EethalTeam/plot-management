@@ -5,7 +5,7 @@ import { MdPictureAsPdf } from "react-icons/md";
 import { Button, Menu, MenuItem, IconButton } from '@mui/material';
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
-import StyledTooltip from '../../Components/CustomComponents/Tooltip';
+import StyledTooltip from './Tooltip';
 
 const ExportTable = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);

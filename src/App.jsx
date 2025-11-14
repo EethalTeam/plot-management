@@ -1,7 +1,7 @@
 import { Route, Routes,Navigate  } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/dashboard";
 import Login from "./Pages/login/login";
-import ProtectedRoute from './Pages/login/ProtectedRoute';
+import ProtectedRoute from './Pages/login/ProtectedRoute.jsx';
 
 function App() {
   return (

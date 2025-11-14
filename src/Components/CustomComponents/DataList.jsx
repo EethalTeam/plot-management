@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { BiSolidDownArrow ,BiSolidUpArrow } from "react-icons/bi";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import LinearProgress from '@mui/material/LinearProgress';
-import StyledTooltip from '../CustomComponents/Tooltip'
+import StyledTooltip from './Tooltip'
 
 const ProjectDataList = (props) => {
   const [inputValue, setInputValue] = useState("");
